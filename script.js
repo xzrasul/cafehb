@@ -151,7 +151,7 @@ function getDefaultLimit() {
 
 // init
 
-function init() {
+document.addEventListener("DOMContentLoaded", () => {
     const burgerMenu = document.querySelector(".burger-menu");
     const mainNav = document.querySelector(".mainNav");
 
@@ -230,10 +230,4 @@ function init() {
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
     }
-}
-
-if (typeof products !== "undefined") {
-  init();
-} else {
-  document.addEventListener("productsLoaded", init);
-}
+});
