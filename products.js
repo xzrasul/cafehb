@@ -1,60 +1,31 @@
-const defaultProducts = {
-    drinks: [
-        { id: "Айс-ти тропик", name: "Айс-ти тропик", price: 22, image: "contant/Напитки/Айс-ти тропик.png", size: "mini" },
-        { id: "Айс-ти ягодный", name: "Айс-ти ягодный", price: 22, image: "contant/Напитки/Айс-ти ягодный.png", size: "mini" },
-        { id: "Айс-ти аки-гава", name: "Айс-ти аки-гава", price: 22, image: "contant/Напитки/Айс-ти аки-гава.png", size: "mini" },
-        { id: "Айс-латте", name: "Айс-латте", price: 25, image: "contant/Напитки/Айс-латте.png", size: "mini" },
-        { id: "Лимонад манго-маракуйя", name: "Лимонад манго-маракуйя", price: 28, image: "contant/Напитки/Лимонад манго-маракуйя.png" },
-        { id: "Лимонад киви-айс", name: "Лимонад киви-айс", price: 28, image: "contant/Напитки/Лимонад киви-айс.png" },
-        { id: "Лимонад классик", name: "Лимонад классик", price: 25, image: "contant/Напитки/Лимонад классик.png" },
-        { id: "Лимонад сан-райз", name: "Лимонад сан-райз", price: 25, image: "contant/Напитки/Лимонад сан-райз.png" },
-        { id: "Лимонад малина-маракуйя", name: "Лимонад малина-маракуйя", price: 28, image: "contant/Напитки/Лимонад манго-маракуйя.png" },
-        { id: "Лимонад ягодный", name: "Лимонад ягодный", price: 28, image: "contant/Напитки/Лимонад ягодный.png" },
-        { id: "Бабл-ти черный бриз", name: "Бабл-ти черный бриз", price: 24, image: "contant/Напитки/Бабл-ти черный бриз.jpg" },
-        { id: "Бабл-ти тропик микс", name: "Бабл-ти тропик микс", price: 24, image: "contant/Напитки/Бабл-ти тропик микс.jpg" },
-        { id: "Бабл-ти клубника-маракуйя", name: "Бабл-ти клубника-маракуйя", price: 24, image: "contant/Напитки/Бабл-ти клубника-маракуйя.jpg" },
-        { id: "Щавель - ананас", name: "Щавель - ананас", price: 30, image: "contant/Напитки/Щавель - ананас.jpg" },
-        { id: "Щавель - яблоко", name: "Щавель - яблоко", price: 30, image: "contant/Напитки/Щавель - яблоко.jpg" },
-        { id: "Глитвейн", name: "Глитвейн", price: 22, image: "contant/Напитки/Глитвейн.jpg" },
-        { id: "Горячий мохито", name: "Горячий мохито", price: 22, image: "contant/Напитки/Горячий мохито.jpg" },
-        { id: "Милкшейк с сникерсом", name: "Милкшейк с сникерсом", price: 30, image: "contant/Напитки/Милкшейк с сникерсом.jpg" },
-        { id: "Милкшейк с орео", name: "Милкшейк с орео", price: 30, image: "contant/Напитки/Милкшейк с орео.jpg" },
-        { id: "Милкшейк с ванильным сиропом", name: "Милкшейк с ванильным сиропом", price: 28, image: "contant/Напитки/Милкшейк с ванильным сиропом.jpg" },
-        { id: "Милкшейк с клубничным сиропом", name: "Милкшейк с клубничным сиропом", price: 28, image: "contant/Напитки/Милкшейк с клубничным сиропом.jpg" },
-        { id: "Милкшейк с черничным сиропом", name: "Милкшейк с черничным сиропом", price: 28, image: "contant/Напитки/Милкшейк с черничным сиропом.jpg" },
-        { id: "Милкшейк с шоколадным сиропом", name: "Милкшейк с шоколадным сиропом", price: 28, image: "contant/Напитки/Милкшейк с шоколадным сиропом.jpg" },
-        { id: "Топленый шоколад", name: "Топленый шоколад", price: 30, image: "contant/Напитки/Топленый шоколад.jpg" },
-        { id: "Топленый шоколад с маршмеллоу", name: "Топленый шоколад с маршмеллоу", price: 30, image: "contant/Напитки/Топленый шоколад горячий шоколад с маршмел.jpg" }
-    ],
-    burgers: [],
-    sandwiches: [],
-    salads: [
-        { id: "Цезарь с курицей и перепелиным яйцом", name: "Цезарь с курицей и перепелиным яйцом", price: 39, image: "contant/Салаты/Цезарь с курицей и перепелиным яйцом.jpg" },
-        { id: "Цезарь с креветками и лососем", name: "Цезарь с креветками и лососем", price: 58, image: "contant/Салаты/Цезарь с креветками и лососем.jpg" },
-        { id: "Греческий классик", name: "Греческий классик", price: 40, image: "contant/Салаты/Греческий классик.jpg" },
-        { id: "Грин салат с авокадо", name: "Грин салат с авокадо", price: 28, image: "contant/Салаты/Грин салат с авокадо.jpg" },
-        { id: "Салат Баклажан темпура", name: "Салат Баклажан темпура", price: 45, image: "contant/Салаты/Салат Баклажан темпура.jpg" },
-        { id: "Салат с запечённой свеклой и говядиной", name: "Салат с запечённой свеклой и говядиной", price: 40, image: "contant/Салаты/Салат с запечённой свеклой и говядиной.jpg" },
-        { id: "Салат с ростбифом и валеными томатами", name: "Салат с ростбифом и валеными томатами", price: 55, image: "contant/Салаты/Салат с ростбифом и валеными томатами.jpg" },
-        { id: "Салат с лососем и креветками", name: "Салат с лососем и креветками", price: 78, image: "contant/Салаты/Салат с лососем и креветками.jpg" }
-    ],
-    dishes: [],
-    breakfast: []
-};
-
 let products;
 
-function loadProducts() {
+async function loadProducts() {
+    try {
+        const s = JSON.parse(localStorage.getItem("cafehb_settings") || "{}");
+        if (s.binId) {
+            const url = "https://api.jsonbin.io/v3/b/" + s.binId + "/latest";
+            const res = await fetch(url, {
+                headers: { "X-Bin-Meta": "false" }
+            });
+            if (res.ok) {
+                products = await res.json();
+                localStorage.setItem("cafehb_products", JSON.stringify(products));
+                document.dispatchEvent(new Event("productsLoaded"));
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn("jsonbin.io error:", e);
+    }
+
     const saved = localStorage.getItem("cafehb_products");
     if (saved) {
-        try {
-            products = JSON.parse(saved);
-        } catch (e) {
-            products = JSON.parse(JSON.stringify(defaultProducts));
-        }
-    } else {
-        products = JSON.parse(JSON.stringify(defaultProducts));
+        try { products = JSON.parse(saved); document.dispatchEvent(new Event("productsLoaded")); return; }
+        catch (e) { }
     }
+    products = JSON.parse(JSON.stringify(defaultProducts));
+    document.dispatchEvent(new Event("productsLoaded"));
 }
 
 loadProducts();
