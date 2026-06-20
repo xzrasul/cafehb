@@ -67,7 +67,6 @@ function createCard(product, categoryKey) {
     price.className = "price-badge";
     price.textContent = `${product.price} c`;
 
-    button.appendChild(img);
     button.appendChild(h3);
     button.appendChild(price);
 
@@ -152,7 +151,7 @@ function getDefaultLimit() {
 
 // init
 
-document.addEventListener("productsLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const burgerMenu = document.querySelector(".burger-menu");
     const mainNav = document.querySelector(".mainNav");
 
