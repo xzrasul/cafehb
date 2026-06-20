@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixel Font Demo</title>
+  <style>
+    @font-face {
+      font-family: 'FixelText';
+      src: url('FixelText/FixelText-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'FixelText';
+      src: url('FixelText/FixelText-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'FixelText';
+      src: url('FixelText/FixelText-RegularItalic.woff2') format('woff2');
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    @font-face {
+      font-family: 'FixelDisplay';
+      src: url('FixelDisplay/FixelDisplay-Black.woff2') format('woff2');
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'FixelDisplay';
+      src: url('FixelDisplay/FixelDisplay-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'FixelVariable';
+      src: url('FixelVariable/FixelVariable.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'FixelText', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #f8f9fa;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-family: 'FixelDisplay', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-family: 'FixelDisplay', sans-serif;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      font-family: 'FixelDisplay', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .weight-item {
+      background: #f0f2ff;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .weight-item .label {
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .weight-item .sample {
+      font-size: 1.5rem;
+      margin-top: 4px;
+    }
+
+    .variable-demo {
+      font-family: 'FixelVariable', sans-serif;
+      font-size: 2rem;
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #f0f2ff, #e8ecff);
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .variable-demo input {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fixel Font</h1>
+    <p class="subtitle">Современный гротеск — три начертания: Text, Display, Variable</p>
+
+    <div class="section">
+      <h2>FixelText</h2>
+      <p>FixelText — это основной текст. Спроектирован для комфортного чтения в малых размерах. Вот как он выглядит в деле:</p>
+      <p style="margin-top: 12px;">Шрифты — это голос вашего дизайна. Они задают тон, настроение и атмосферу. Fixel сочетает геометрическую чёткость с гуманистической теплотой, делая текст одновременно современным и дружелюбным.</p>
+      <p class="bold" style="margin-top: 8px;">Жирный — для акцентов и заголовков внутри текста.</p>
+      <p class="italic" style="margin-top: 8px;">Курсив — для цитат, пояснений и иностранных слов.</p>
+    </div>
+
+    <div class="section">
+      <h2>FixelDisplay</h2>
+      <p>FixelDisplay — для крупных заголовков. Все веса:</p>
+      <div class="weight-grid">
+        <div class="weight-item">
+          <div class="label">Thin</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 100;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">ExtraLight</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 200;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">Light</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 300;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">Regular</div>
+          <div class="sample" style="font-family: 'FixelDisplay';">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">Medium</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 500;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">SemiBold</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 600;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">Bold</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 700;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">ExtraBold</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 800;">Aa</div>
+        </div>
+        <div class="weight-item">
+          <div class="label">Black</div>
+          <div class="sample" style="font-family: 'FixelDisplay'; font-weight: 900;">Aa</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>FixelVariable</h2>
+      <p>Вариативный шрифт — меняйте вес от Thin до Black плавно:</p>
+      <div class="variable-demo">
+        <span id="varText" style="font-variation-settings: 'wght' 400;">Fixel Variable</span>
+        <input type="range" id="weightSlider" min="100" max="900" value="400" oninput="document.getElementById('varText').style.fontVariationSettings = '\'wght\' ' + this.value; document.getElementById('weightLabel').textContent = 'Weight: ' + this.value;">
+        <div id="weightLabel" style="font-size: 0.9rem; color: #666; margin-top: 4px;">Weight: 400</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

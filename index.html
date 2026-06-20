@@ -1,61 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="shortcut icon"
-      href="contant/logo/LOGO.png"
-      type="image/x-icon"
-    />
-    <title>Cafe HB</title>
-  </head>
-  <body>
-    <header>
-      <nav>
-        <div class="nav-mob">
-          <a class="join-a logo-m" href="#" data-category="all" data-limit="8"
-            ><img src="contant/logo/LOGO.png" alt="Logo" />
-            <h2>CAFE</h2>
-          </a>
-          <div class="burger-menu" aria-label="Открыть меню">
-            <span></span>
-            <span></span>
-            <span></span>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="contant/logo/LOGO.png" type="image/x-icon" />
+  <title>café hb
+  </title>
+</head>
+
+<body>
+  <div class="nav-mob">
+    <a class="join-a logo-m" href="#" data-category="all" data-limit="8">
+      <h2>café hb
+      </h2>
+    </a>
+    <div class="burger-menu" aria-label="Открыть меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <header>
+    <nav>
+      <ul class="mainNav">
+        <li><a href="#" class="hover:underline" data-category="sandwiches">Сендвичи</a></li>
+        <li><a href="#" class="hover:underline" data-category="burgers">Бургеры</a></li>
+        <li><a href="#" class="hover:underline" data-category="drinks">Напитки</a></li>
+        <li class="logo-d"><a href="#" data-category="all" data-limit="6"><img src="contant/logo/LOGO.png"
+              alt="Logo" /></a></li>
+        <li><a href="#" class="hover:underline" data-category="dishes">Блюда</a></li>
+        <li><a href="#" class="hover:underline" data-category="salads">Салаты</a></li>
+        <li><a href="#" class="hover:underline" data-category="breakfast">Завтраки</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="main">
+    <div class="hero">
+      <h1 class="hero-title">Меню</h1>
+      <p class="hero-subtitle">café hb
+        — вкусно по-другому</p>
+    </div>
+    <div id="products-container"></div>
+  </div>
+  <footer>
+    <div class="footer">
+      <div class="footer-logo">
+        <div class="ft-logo">
+          <div class="ft-logo-img">
+            <img src="contant/logo/LOGO.png" alt="Logo" />
           </div>
+          <h2>cafe hb</h2>
         </div>
-        <ul class="mainNav">
-          <li><a href="#" class="hover:underline" data-category="sandwiches">Сендвичи</a></li>
-          <li><a href="#" class="hover:underline" data-category="burgers">Бургеры</a></li>
-          <li><a href="#" class="hover:underline" data-category="drinks">Напитки</a></li>
-          <li class="logo-d"><a href="#" data-category="all" data-limit="6"><img src="contant/logo/LOGO.png" alt="Logo" /></a></li>
-          <li><a href="#" class="hover:underline" data-category="dishes">Блюда</a></li>
-          <li><a href="#" class="hover:underline" data-category="salads">Салаты</a></li>
-          <li><a href="#" class="hover:underline" data-category="breakfast">Завтраки</a></li>
-        </ul>
-      </nav>
-    </header>
-    <div class="main" id="products-container">
       </div>
-    <footer>
-        <div class="footer">
-          <div class="footer-logo">
-            <div class="ft-logo">
-              <img src="contant/logo/LOGO.png" alt="Logo" />
-              <h2>CAFE HB</h2>
-            </div>
-          </div>
-          <div class="footer-info">
-            <p>
-              <a target="_blank" href="https://www.instagram.com/cafe.hb_dushanbe/">Instagram</a>
-            </p>
-            <a href="tel:+992940909009">+992 940 90 90 09</a>
-            <p>© 2026 ООО "CAFE HB". Все права защищены</p>
-          </div>  
-    </footer>
-    <script src="products.js"></script>
-    <script src="script.js"></script>
-  </body>
+      <div class="footer-info">
+        <p>
+          <a target="_blank" href="https://www.instagram.com/cafe
+.hb_dushanbe/">Instagram</a>
+        </p>
+        <a href="tel:+992940909009">+992 940 90 90 09</a>
+        <p>© café hb
+        </p>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" id="backToTop" aria-label="Наверх">↑</button>
+  <script src="products.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>

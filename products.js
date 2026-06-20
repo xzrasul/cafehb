@@ -1,47 +1,77 @@
-const products = {
-    drinks: [
-        { id: "Айс-ти тропик", name: "Айс-ти тропик", price: 22, image: "contant/Напитки/Айс-ти тропик.png", size: "mini" },
-        { id: "Айс-ти ягодный", name: "Айс-ти ягодный", price: 22, image: "contant/Напитки/Айс-ти ягодный.png", size: "mini" },
-        { id: "Айс-ти аки-гава", name: "Айс-ти аки-гава", price: 22, image: "contant/Напитки/Айс-ти аки-гава.png", size: "mini" },
-        { id: "Айс-латте", name: "Айс-латте", price: 25, image: "contant/Напитки/Айс-латте.png", size: "mini" },
-        { id: "Лимонад манго-маракуйя", name: "Лимонад манго-маракуйя", price: 28, image: "contant/Напитки/Лимонад манго-маракуйя.png" },
-        { id: "Лимонад киви-айс", name: "Лимонад киви-айс", price: 28, image: "contant/Напитки/Лимонад киви-айс.png" },
-        { id: "Лимонад классик", name: "Лимонад классик", price: 25, image: "contant/Напитки/Лимонад классик.png" },
-        { id: "Лимонад сан-райз", name: "Лимонад сан-райз", price: 25, image: "contant/Напитки/Лимонад сан-райз.png" },
-        { id: "Лимонад малина-маракуйя", name: "Лимонад малина-маракуйя", price: 28, image: "contant/Напитки/Лимонад манго-маракуйя.png" },
-        { id: "Лимонад ягодный", name: "Лимонад ягодный", price: 28, image: "contant/Напитки/Лимонад ягодный.png" },
-        { id: "Бабл-ти черный бриз", name: "Бабл-ти черный бриз", price: 24, image: "contant/Напитки/Бабл-ти черный бриз.jpg" },
-        { id: "Бабл-ти тропик микс", name: "Бабл-ти тропик микс", price: 24, image: "contant/Напитки/Бабл-ти тропик микс.jpg" },
-        { id: "Бабл-ти клубника-маракуйя", name: "Бабл-ти клубника-маракуйя", price: 24, image: "contant/Напитки/Бабл-ти клубника-маракуйя.jpg" },
-        { id: "Щавель - ананас", name: "Щавель - ананас", price: 30, image: "contant/Напитки/Щавель - ананас.jpg" },
-        { id: "Щавель - яблоко", name: "Щавель - яблоко", price: 30, image: "contant/Напитки/Щавель - яблоко.jpg" },
-        { id: "Глитвейн", name: "Глитвейн", price: 22, image: "contant/Напитки/Глитвейн.jpg" },
-        { id: "Горячий мохито", name: "Горячий мохито", price: 22, image: "contant/Напитки/Горячий мохито.jpg" },
-        { id: "Милкшейк с сникерсом", name: "Милкшейк с сникерсом", price: 30, image: "contant/Напитки/Милкшейк с сникерсом.jpg" },
-        { id: "Милкшейк с орео", name: "Милкшейк с орео", price: 30, image: "contant/Напитки/Милкшейк с орео.jpg" },
-        { id: "Милкшейк с ванильным сиропом", name: "Милкшейк с ванильным сиропом", price: 28, image: "contant/Напитки/Милкшейк с ванильным сиропом.jpg" },
-        { id: "Милкшейк с клубничным сиропом", name: "Милкшейк с клубничным сиропом", price: 28, image: "contant/Напитки/Милкшейк с клубничным сиропом.jpg" },
-        { id: "Милкшейк с черничным сиропом", name: "Милкшейк с черничным сиропом", price: 28, image: "contant/Напитки/Милкшейк с черничным сиропом.jpg" },
-        { id: "Милкшейк с шоколадным сиропом", name: "Милкшейк с шоколадным сиропом", price: 28, image: "contant/Напитки/Милкшейк с шоколадным сиропом.jpg" },
-        { id: "Топленый шоколад", name: "Топленый шоколад", price: 30, image: "contant/Напитки/Топленый шоколад.jpg" },
-        { id: "Топленый шоколад с маршмеллоу", name: "Топленый шоколад с маршмеллоу", price: 30, image: "contant/Напитки/Топленый шоколад горячий шоколад с маршмел.jpg" }
-    ],
-    burgers: [
-    
-    ],
-    sandwiches: [],
-    salads: [
-         { id: "Цезарь с курицей и перепелиным яйцом", name: "Цезарь с курицей и перепелиным яйцом", price: 39, image: "contant/Салаты/Цезарь с курицей и перепелиным яйцом.jpg" },
-         { id: "Цезарь с креветками и лососем", name: "Цезарь с креветками и лососем", price: 58, image: "contant/Салаты/Цезарь с креветками и лососем.jpg" },
-         { id: "Греческий классик", name: "Греческий классик", price: 40, image: "contant/Салаты/Греческий классик.jpg" },
-         { id: "Грин салат с авокадо", name: "Грин салат с авокадо", price: 28, image: "contant/Салаты/Грин салат с авокадо.jpg" },
-         { id: "Салат Баклажан темпура", name: "Салат Баклажан темпура", price: 45, image: "contant/Салаты/Салат Баклажан темпура.jpg" },
-         { id: "Салат с запечённой свеклой и говядиной", name: "Салат с запечённой свеклой и говядиной", price: 40, image: "contant/Салаты/Салат с запечённой свеклой и говядиной.jpg" },
-         { id: "Салат с ростбифом и валеными томатами", name: "Салат с ростбифом и валеными томатами", price: 55, image: "contant/Салаты/Салат с ростбифом и валеными томатами.jpg" },
-         { id: "Салат с лососем и креветками", name: "Салат с лососем и креветками", price: 78, image: "contant/Салаты/Салат с лососем и креветками.jpg" },
-    ],
-    dishes: [
-        
-    ],
-    breakfast: []
-};
+// products.js — читает меню из Google Sheets (опубликованного как CSV)
+// Замени SHEET_ID на ID своей таблицы (из URL)
+
+const SHEET_ID = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHVv1jGGuaxu57VmQDBLggRvQvQeqRmz7wZ7jRkfuqkTbJJfuASyI-eg1i5XNsQl-mJ3s16rmErzD/pub?output=csv"; // пример: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms
+
+let products = {};
+
+async function loadProducts() {
+    try {
+        // Читаем лист "menu" как CSV
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=menu`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Sheets fetch failed");
+        const csv = await res.text();
+
+        // Парсим CSV → объект products
+        const rows = parseCSV(csv);
+        const headers = rows[0]; // ["category","name","price","imageUrl"]
+
+        const catIdx = headers.indexOf("category");
+        const nameIdx = headers.indexOf("name");
+        const priceIdx = headers.indexOf("price");
+        const imgIdx = headers.indexOf("imageUrl");
+
+        products = {};
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const cat = row[catIdx]?.trim();
+            const name = row[nameIdx]?.trim();
+            const price = parseInt(row[priceIdx]);
+            const image = row[imgIdx]?.trim();
+
+            if (!cat || !name || !price) continue;
+
+            if (!products[cat]) products[cat] = [];
+            products[cat].push({
+                id: name,
+                name,
+                price,
+                image: image || null
+            });
+        }
+    } catch (e) {
+        console.warn("Sheets load error:", e);
+        products = {};
+    }
+
+    document.dispatchEvent(new Event("productsLoaded"));
+}
+
+// Простой CSV парсер (учитывает кавычки)
+function parseCSV(text) {
+    const rows = [];
+    const lines = text.split(/\r?\n/);
+    for (const line of lines) {
+        if (!line.trim()) continue;
+        const cols = [];
+        let cur = "";
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (ch === '"') {
+                if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+                else inQuotes = !inQuotes;
+            } else if (ch === ',' && !inQuotes) {
+                cols.push(cur); cur = "";
+            } else {
+                cur += ch;
+            }
+        }
+        cols.push(cur);
+        rows.push(cols);
+    }
+    return rows;
+}
+
+loadProducts();

@@ -16,35 +16,72 @@ function createCard(product, categoryKey) {
     const safeId = (categoryKey + '-' + product.id).replace(/\s+/g, '-');
     const button = document.createElement("button");
     button.className = "popUp-btn";
-    button.setAttribute("popovertarget", safeId);
+    button.dataset.popoverId = safeId;
 
     const popup = document.createElement("div");
     popup.className = "popUp-style";
-    popup.setAttribute("popover", "");
+    popup.setAttribute("popover", "manual");
     popup.id = safeId;
 
-    const popupImg = document.createElement("img");
-    popupImg.src = product.image;
-    popupImg.alt = product.name;
+    const popupInner = document.createElement("div");
+    popupInner.className = "popUp-inner";
+
+    const popupImageWrap = document.createElement("div");
+    popupImageWrap.className = "popUp-image-wrap";
+
+    if (product.image) {
+      const popupImg = document.createElement("img");
+      popupImg.src = product.image;
+      popupImg.alt = product.name;
+      popupImageWrap.appendChild(popupImg);
+    }
+
+    const popupBody = document.createElement("div");
+    popupBody.className = "popUp-body";
 
     const popupH3 = document.createElement("h3");
-    popupH3.innerHTML = `${product.name} <br>${product.price}c`;
+    popupH3.textContent = product.name;
 
-    popup.appendChild(popupImg);
-    popup.appendChild(popupH3);
-    button.appendChild(popup);
+    const popupPrice = document.createElement("span");
+    popupPrice.className = "popUp-price";
+    popupPrice.textContent = `${product.price} c`;
 
-    const img = document.createElement("img");
-    img.src = product.image;
-    img.alt = product.name;
+    popupBody.appendChild(popupH3);
+    popupBody.appendChild(popupPrice);
+
+    popupInner.appendChild(popupImageWrap);
+    popupInner.appendChild(popupBody);
+    popup.appendChild(popupInner);
+
+    if (product.image) {
+      const img = document.createElement("img");
+      img.src = product.image;
+      img.alt = product.name;
+      button.appendChild(img);
+    }
 
     const h3 = document.createElement("h3");
     h3.textContent = product.name;
 
+    const price = document.createElement("span");
+    price.className = "price-badge";
+    price.textContent = `${product.price} c`;
+
     button.appendChild(img);
     button.appendChild(h3);
+    button.appendChild(price);
+
+    button.addEventListener("click", () => {
+        const openPopover = document.querySelector(".popUp-style[popover]:popover-open");
+        if (openPopover) {
+            openPopover.hidePopover();
+        } else {
+            popup.showPopover();
+        }
+    });
 
     card.appendChild(button);
+    card.appendChild(popup);
     return card;
 }
 
@@ -115,7 +152,7 @@ function getDefaultLimit() {
 
 // init
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("productsLoaded", () => {
     const burgerMenu = document.querySelector(".burger-menu");
     const mainNav = document.querySelector(".mainNav");
 
@@ -162,4 +199,36 @@ document.addEventListener("DOMContentLoaded", () => {
             renderProducts(currentLimit);
         });
     });
+
+    // close popover on click outside
+    document.addEventListener("click", (e) => {
+        const popover = document.querySelector(".popUp-style[popover]:popover-open");
+        if (!popover) return;
+        if (!popover.contains(e.target) && !e.target.closest(".popUp-btn")) {
+            popover.hidePopover();
+        }
+    });
+
+    // close popover on Escape
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            const popover = document.querySelector(".popUp-style[popover]:popover-open");
+            if (popover) popover.hidePopover();
+        }
+    });
+
+    // back to top
+    const backToTop = document.getElementById("backToTop");
+    if (backToTop) {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 400) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        });
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
 });
