@@ -42,19 +42,6 @@ const defaultProducts = {
     breakfast: []
 };
 
-let products;
+let products = JSON.parse(JSON.stringify(defaultProducts));
 
-function loadProducts() {
-    const saved = localStorage.getItem("cafehb_products");
-    if (saved) {
-        try {
-            products = JSON.parse(saved);
-        } catch (e) {
-            products = JSON.parse(JSON.stringify(defaultProducts));
-        }
-    } else {
-        products = JSON.parse(JSON.stringify(defaultProducts));
-    }
-}
 
-loadProducts();
