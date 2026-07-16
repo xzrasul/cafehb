@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiple Bottom Sheets</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #007aff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Overlay */
+
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Bottom Sheet */
+
+        .bottom-sheet {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+
+            width: 100%;
+            height: 80vh;
+
+            background: white;
+
+            border-radius: 24px 24px 0 0;
+
+            transform: translateY(100%);
+
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+
+            display: flex;
+            flex-direction: column;
+
+            overflow: hidden;
+
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .popup-overlay.active .bottom-sheet {
+            transform: translateY(0);
+        }
+
+        .popup-overlay.closing .bottom-sheet {
+            transform: translateY(100%);
+        }
+
+        /* Drag handle */
+
+        .sheet-handle {
+            width: 50px;
+            height: 5px;
+
+            background: #d5d5d5;
+
+            border-radius: 999px;
+
+            margin: 12px auto;
+
+            flex-shrink: 0;
+        }
+
+        /* Content */
+
+        .sheet-content {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 20px;
+
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sheet-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .sheet-content p {
+            margin-bottom: 15px;
+
+            line-height: 1.6;
+        }
+
+        /* Desktop */
+
+        @media (min-width: 768px) {
+            .popup-overlay {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .bottom-sheet {
+                position: relative;
+
+                width: 500px;
+
+                max-height: 80vh;
+
+                height: auto;
+
+                border-radius: 24px;
+
+                transform: scale(0.95);
+            }
+
+            .popup-overlay.active .bottom-sheet {
+                transform: scale(1);
+            }
+
+            .popup-overlay.closing .bottom-sheet {
+                transform: scale(0.95);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="openPopup('productPopup')">Открыть товар</button>
+
+    <button onclick="openPopup('cartPopup')">Открыть корзину</button>
+
+    <!-- Popup 1 -->
+
+    <div class="popup-overlay" id="productPopup">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+
+            <div class="sheet-content">
+                <img src="https://hbshop.tj/media/items/Frame_1_2_X7LeCQc.jpg" width="200px" alt="">
+                <h2>Товар</h2>
+
+                <p>Информация о товаре.</p>
+
+                <p>Описание товара, характеристики и цена.</p>
+
+                <p>Lorem ipsum dolor sit amet.</p>
+
+                <button onclick="closePopup('productPopup')">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup 2 -->
+
+    <div class="popup-overlay" id="cartPopup">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+
+            <div class="sheet-content">
+                <h2>Корзина</h2>
+
+                <p>Ваши товары находятся здесь.</p>
+
+                <p>Количество товаров: 5</p>
+
+                <p>Lorem ipsum dolor sit amet.</p>
+
+                <button onclick="closePopup('cartPopup')">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Открытие любого popup
+
+        function openPopup(id) {
+            const popup = document.getElementById(id);
+            popup.classList.remove("closing");
+
+            popup.classList.add("active");
+
+            document.body.style.overflow = "hidden";
+        }
+
+        // Закрытие любого popup
+
+        function closePopup(id) {
+            const popup = document.getElementById(id);
+
+            popup.classList.add("closing");
+
+            setTimeout(() => {
+                popup.classList.remove("active", "closing");
+
+                document.body.style.overflow = "";
+            }, 320);
+        }
+
+        // Закрытие нажатием на фон
+
+        document.querySelectorAll(".popup-overlay").forEach((popup) => {
+            popup.addEventListener("click", (e) => {
+                if (e.target === popup) {
+                    closePopup(popup.id);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

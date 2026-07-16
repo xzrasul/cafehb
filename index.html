@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
   <link rel="stylesheet" href="style.css" />
   <link rel="shortcut icon" href="contant/logo/LOGO.png" type="image/x-icon" />
   <title>café hb
@@ -13,15 +12,11 @@
 
 <body>
   <div class="nav-mob">
-    <a class="join-a logo-m" href="#" data-category="all" data-limit="8">
-      <h2>café hb
+    <a class="join-a logo-m" href="#" data-category="all">
+      <h2>café
       </h2>
+      <img src="contant/logo/LOGO.png" alt="">
     </a>
-    <div class="burger-menu" aria-label="Открыть меню">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
   </div>
   <header>
     <nav>
@@ -29,8 +24,7 @@
         <li><a href="#" class="hover:underline" data-category="sandwiches">Сендвичи</a></li>
         <li><a href="#" class="hover:underline" data-category="burgers">Бургеры</a></li>
         <li><a href="#" class="hover:underline" data-category="drinks">Напитки</a></li>
-        <li class="logo-d"><a href="#" data-category="all" data-limit="6"><img src="contant/logo/LOGO.png"
-              alt="Logo" /></a></li>
+        <li class="logo-d"><a href="#" data-category="all"><img src="contant/logo/LOGO.png" alt="Logo" /></a></li>
         <li><a href="#" class="hover:underline" data-category="dishes">Блюда</a></li>
         <li><a href="#" class="hover:underline" data-category="salads">Салаты</a></li>
         <li><a href="#" class="hover:underline" data-category="breakfast">Завтраки</a></li>
@@ -39,34 +33,32 @@
   </header>
   <div class="main">
     <div class="hero">
-      <h1 class="hero-title">Меню</h1>
+      <p class="hero-title">Меню</p>
       <p class="hero-subtitle">café hb
         — вкусно по-другому</p>
     </div>
+    <div class="category-slider" id="categorySlider"></div>
     <div id="products-container"></div>
   </div>
   <footer>
     <div class="footer">
       <div class="footer-logo">
         <div class="ft-logo">
-          <div class="ft-logo-img">
-            <img src="contant/logo/LOGO.png" alt="Logo" />
-          </div>
-          <h2>cafe hb</h2>
+          <h2>café hb</h2>
         </div>
       </div>
       <div class="footer-info">
         <p>
-          <a target="_blank" href="https://www.instagram.com/cafe
-.hb_dushanbe/">Instagram</a>
+          <a target="_blank" href="https://www.instagram.com/cafe.hb_dushanbe/">Instagram</a>
         </p>
         <a href="tel:+992940909009">+992 940 90 90 09</a>
-        <p>© café hb
-        </p>
+        <p>© café hb</p>
+        <p class="info-creator">created by <a target="_blank" href="https://xzrasul.vercel.app">xzrasul</a></p>
       </div>
     </div>
   </footer>
-  <button class="back-to-top" id="backToTop" aria-label="Наверх">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Наверх"><img width="30px" src="contant/logo/backToTop.png"
+      alt=""></button>
   <script src="products.js"></script>
   <script src="script.js"></script>
 </body>
