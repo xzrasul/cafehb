@@ -1,239 +1,378 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Multiple Bottom Sheets</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Perfect Arc Showcase</title>
     <style>
+        :root {
+            /* Дефолтные размеры для десктопа */
+            --card-width: 300px;
+            --card-height: 400px;
+            --stage-size: 2800px;
+            --origin-y: 1600px;
+            /* Расстояние от верха карточки до центра вращения */
+            --glow-size: 600px;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                /* Адаптивные размеры для мобильных устройств */
+                --card-width: 180px;
+                --card-height: 240px;
+                --stage-size: 1600px;
+                --origin-y: 900px;
+                --glow-size: 400px;
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Убираем синюю рамку при тапе на iOS */
         }
 
         body {
-            background: #f5f5f5;
-            padding: 30px;
-        }
-
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 12px;
-            background: #007aff;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* Overlay */
-
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-            z-index: 9999;
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Bottom Sheet */
-
-        .bottom-sheet {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-
-            width: 100%;
-            height: 80vh;
-
-            background: white;
-
-            border-radius: 24px 24px 0 0;
-
-            transform: translateY(100%);
-
-            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
-
+            background-color: #080808;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            user-select: none;
+        }
 
+        /* Текстовый блок сверху */
+        .header-info {
+            text-align: center;
+            margin-top: 10px;
+            z-index: 10;
+            pointer-events: none;
+            max-width: 600px;
+        }
+
+        .header-info h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, #ffffff, #a1a1a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: opacity 0.3s ease;
+        }
+
+        .header-info p {
+            color: #888;
+            font-size: 1rem;
+            line-height: 1.4;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ОГРОМНЫЙ БАРАБАН (КОЛЕСО) */
+        .stage {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, 0);
+            /* Усаживаем верхушку ровно по центру вертикали */
+            width: var(--stage-size);
+            height: var(--stage-size);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            pointer-events: none;
+        }
+
+        /* Вращающийся трек */
+        .track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform-origin: center center;
+            transition: transform 0.85s cubic-bezier(0.15, 0.85, 0.35, 1);
+            will-change: transform;
+            pointer-events: auto;
+        }
+
+        /* Карточка продукта */
+        .card {
+            position: absolute;
+            width: var(--card-width);
+            height: var(--card-height);
+            left: calc(50% - (var(--card-width) / 2));
+            top: calc(-1 * (var(--card-height) / 2));
+            /* Половина карточки выше оси вращения */
+            border-radius: 20px;
             overflow: hidden;
-
-            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .9);
+            transform-origin: center var(--origin-y);
+            transition:
+                transform 0.85s cubic-bezier(0.15, 0.85, 0.35, 1),
+                filter 0.5s ease,
+                opacity 0.5s ease;
+            cursor: pointer;
+            will-change: transform, filter;
+            filter: brightness(0.2) grayscale(0.5);
+            opacity: 0.3;
         }
 
-        .popup-overlay.active .bottom-sheet {
-            transform: translateY(0);
+        /* Активная карточка по центру */
+        .card.active {
+            filter: brightness(1) grayscale(0);
+            opacity: 1;
         }
 
-        .popup-overlay.closing .bottom-sheet {
-            transform: translateY(100%);
+        /* Соседние карточки слегка видны */
+        .card.visible-neighbor {
+            filter: brightness(0.4) grayscale(0.2);
+            opacity: 0.7;
         }
 
-        /* Drag handle */
-
-        .sheet-handle {
-            width: 50px;
-            height: 5px;
-
-            background: #d5d5d5;
-
-            border-radius: 999px;
-
-            margin: 12px auto;
-
-            flex-shrink: 0;
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            /* Предотвращаем дефолтный drag картинки */
         }
 
-        /* Content */
-
-        .sheet-content {
-            flex: 1;
-
-            overflow-y: auto;
-
-            padding: 20px;
-
-            -webkit-overflow-scrolling: touch;
+        /* Мягкое неоновое свечение за центральной картинкой */
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--glow-size);
+            height: var(--glow-size);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .sheet-content h2 {
+        /* Индикатор скролла внизу */
+        .scroll-indicator {
+            z-index: 10;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
             margin-bottom: 15px;
+            text-align: center;
         }
 
-        .sheet-content p {
-            margin-bottom: 15px;
-
-            line-height: 1.6;
-        }
-
-        /* Desktop */
-
-        @media (min-width: 768px) {
-            .popup-overlay {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .bottom-sheet {
-                position: relative;
-
-                width: 500px;
-
-                max-height: 80vh;
-
-                height: auto;
-
-                border-radius: 24px;
-
-                transform: scale(0.95);
-            }
-
-            .popup-overlay.active .bottom-sheet {
-                transform: scale(1);
-            }
-
-            .popup-overlay.closing .bottom-sheet {
-                transform: scale(0.95);
+        @media (max-width: 768px) {
+            .scroll-indicator {
+                font-size: 0.7rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <button onclick="openPopup('productPopup')">Открыть товар</button>
 
-    <button onclick="openPopup('cartPopup')">Открыть корзину</button>
+    <div class="header-info">
+        <h1 id="product-title">Загрузка...</h1>
+        <p id="product-desc">Пожалуйста, подождите</p>
+    </div>
 
-    <!-- Popup 1 -->
+    <div class="glow"></div>
 
-    <div class="popup-overlay" id="productPopup">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-
-            <div class="sheet-content">
-                <img src="https://hbshop.tj/media/items/Frame_1_2_X7LeCQc.jpg" width="200px" alt="">
-                <h2>Товар</h2>
-
-                <p>Информация о товаре.</p>
-
-                <p>Описание товара, характеристики и цена.</p>
-
-                <p>Lorem ipsum dolor sit amet.</p>
-
-                <button onclick="closePopup('productPopup')">Закрыть</button>
+    <div class="stage">
+        <div class="track" id="track">
+            <div class="card" data-title="Neon Escape" data-desc="Погружение в бесконечные неоновые горизонты.">
+                <img src="https://picsum.photos/600/800?random=11" alt="Neon Escape">
+            </div>
+            <div class="card" data-title="Quiet Desert" data-desc="Величие тишины среди песчаных дюн.">
+                <img src="https://picsum.photos/600/800?random=12" alt="Quiet Desert">
+            </div>
+            <div class="card" data-title="Urban Cyberpunk" data-desc="Свечение мегаполиса сквозь пелену дождя.">
+                <img src="https://picsum.photos/600/800?random=13" alt="Urban Cyberpunk">
+            </div>
+            <div class="card" data-title="Abstract Thought" data-desc="Визуализация мыслей за пределами реальности.">
+                <img src="https://picsum.photos/600/800?random=14" alt="Abstract Thought">
+            </div>
+            <div class="card" data-title="Classic Speed" data-desc="Завораживающий стиль винтажных суперкаров.">
+                <img src="https://picsum.photos/600/800?random=15" alt="Classic Speed">
+            </div>
+            <div class="card" data-title="Futuristic Hub"
+                data-desc="Архитектура, созданная технологиями завтрашнего дня.">
+                <img src="https://picsum.photos/600/800?random=16" alt="Futuristic Hub">
+            </div>
+            <div class="card" data-title="Deep Waters" data-desc="Загадки скрытых течений глубокого океана.">
+                <img src="https://picsum.photos/600/800?random=17" alt="Deep Waters">
+            </div>
+            <div class="card" data-title="Lost Forest" data-desc="Умиротворение дикой нетронутой природы.">
+                <img src="https://picsum.photos/600/800?random=18" alt="Lost Forest">
             </div>
         </div>
     </div>
 
-    <!-- Popup 2 -->
-
-    <div class="popup-overlay" id="cartPopup">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-
-            <div class="sheet-content">
-                <h2>Корзина</h2>
-
-                <p>Ваши товары находятся здесь.</p>
-
-                <p>Количество товаров: 5</p>
-
-                <p>Lorem ipsum dolor sit amet.</p>
-
-                <button onclick="closePopup('cartPopup')">Закрыть</button>
-            </div>
-        </div>
-    </div>
+    <div class="scroll-indicator" id="nav-hint">Прокрутите колесико мыши или свайпните для выбора</div>
 
     <script>
-        // Открытие любого popup
+        const track = document.getElementById("track");
+        const cards = document.querySelectorAll(".card");
+        const titleEl = document.getElementById("product-title");
+        const descEl = document.getElementById("product-desc");
+        const hintEl = document.getElementById("nav-hint");
 
-        function openPopup(id) {
-            const popup = document.getElementById(id);
-            popup.classList.remove("closing");
+        const totalCards = cards.length;
+        const angleStep = 20; // Шаг вращения в градусах между соседними элементами
+        let currentIndex = 0;
+        let locked = false;
 
-            popup.classList.add("active");
+        // Координаты для touch-событий
+        let touchStartX = 0;
+        let touchStartY = 0;
 
-            document.body.style.overflow = "hidden";
+        // Определение мобильного устройства для адаптации подсказки
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            hintEl.textContent = "Проведите пальцем (свайп) для выбора";
         }
 
-        // Закрытие любого popup
+        // Инициализация начальных углов карточек
+        function initCarousel() {
+            cards.forEach((card, index) => {
+                const angle = index * angleStep;
+                card.dataset.angle = angle;
+                card.style.transform = `rotate(${angle}deg)`;
 
-        function closePopup(id) {
-            const popup = document.getElementById(id);
-
-            popup.classList.add("closing");
-
-            setTimeout(() => {
-                popup.classList.remove("active", "closing");
-
-                document.body.style.overflow = "";
-            }, 320);
+                // Навешиваем клик на карточки для перехода к ним
+                card.addEventListener('click', () => {
+                    if (index !== currentIndex) {
+                        goToIndex(index);
+                    }
+                });
+            });
         }
 
-        // Закрытие нажатием на фон
+        // Плавное обновление карусели
+        function updateCarousel() {
+            cards.forEach((card, index) => {
+                const position = index - currentIndex;
+                const angle = position * angleStep;
 
-        document.querySelectorAll(".popup-overlay").forEach((popup) => {
-            popup.addEventListener("click", (e) => {
-                if (e.target === popup) {
-                    closePopup(popup.id);
+                card.style.transform = `rotate(${angle}deg)`;
+
+                // Классы для стилизации активных и соседних карточек
+                card.classList.remove('active', 'visible-neighbor');
+
+                if (position === 0) {
+                    card.classList.add('active');
+                    // Обновляем тексты под активный слайд
+                    updateText(card.dataset.title, card.dataset.desc);
+                } else if (Math.abs(position) === 1) {
+                    card.classList.add('visible-neighbor');
                 }
             });
-        });
+        }
+
+        // Безопасное обновление текстовой информации с эффектом плавного перехода
+        function updateText(title, desc) {
+            titleEl.style.opacity = 0;
+            descEl.style.opacity = 0;
+
+            setTimeout(() => {
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                titleEl.style.opacity = 1;
+                descEl.style.opacity = 1;
+            }, 150);
+        }
+
+        // Функция перехода на конкретный слайд с валидацией границ
+        function goToIndex(index) {
+            if (locked) return;
+
+            // Ограничиваем индекс в рамках доступных карточек [0 ... totalCards - 1]
+            const targetIndex = Math.max(0, Math.min(index, totalCards - 1));
+
+            if (targetIndex !== currentIndex) {
+                locked = true;
+                currentIndex = targetIndex;
+                updateCarousel();
+
+                setTimeout(() => {
+                    locked = false;
+                }, 750); // Разблокируем после завершения CSS transition
+            }
+        }
+
+        // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+
+        // Wheel (Десктоп)
+        window.addEventListener("wheel", (e) => {
+            if (locked) return;
+
+            if (e.deltaY > 0) {
+                goToIndex(currentIndex + 1);
+            } else {
+                goToIndex(currentIndex - 1);
+            }
+        }, { passive: true });
+
+        // Touchstart (Мобильные)
+        window.addEventListener("touchstart", (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        // Touchend (Вычисление направления свайпа)
+        window.addEventListener("touchend", (e) => {
+            if (locked) return;
+
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+
+            const minSwipeDistance = 50; // Минимальная дистанция свайпа в пикселях
+
+            // Определяем превалирующее направление (горизонтальное или вертикальное)
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                // Горизонтальный свайп
+                if (Math.abs(diffX) > minSwipeDistance) {
+                    if (diffX > 0) {
+                        goToIndex(currentIndex + 1); // Свайп влево -> Вперед
+                    } else {
+                        goToIndex(currentIndex - 1); // Свайп вправо -> Назад
+                    }
+                }
+            } else {
+                // Вертикальный свайп
+                if (Math.abs(diffY) > minSwipeDistance) {
+                    if (diffY > 0) {
+                        goToIndex(currentIndex + 1); // Свайп вверх -> Вперед
+                    } else {
+                        goToIndex(currentIndex - 1); // Свайп вниз -> Назад
+                    }
+                }
+            }
+        }, { passive: true });
+
+        // Запуск
+        initCarousel();
+        updateCarousel();
     </script>
 </body>
 
