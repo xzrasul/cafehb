@@ -187,10 +187,13 @@ function createProductCard(product, categoryKey) {
 
 /* ---------- Рендер секций и списка товаров ---------- */
 
-function renderCategorySection(category, limit, onCategorySelect) {
-  const showingAll = limit == null;
+function renderCategorySection(category, limit, onCategorySelect, onToggleCategory, options = {}) {
   const items = products[category.key] || [];
-  const visibleItems = showingAll ? items : items.slice(0, limit);
+  const isExpanded = options.isExpanded === true;
+  const showToggle = options.showToggle === true;
+  const sectionLimit = isExpanded ? null : limit;
+  const showingAll = sectionLimit == null;
+  const visibleItems = showingAll ? items : items.slice(0, sectionLimit);
 
   const title = document.createElement("button");
   title.type = "button";
@@ -214,6 +217,20 @@ function renderCategorySection(category, limit, onCategorySelect) {
   section.dataset.category = category.key;
   section.append(title, cardsContainer);
 
+  if (showToggle && (items.length > (limit ?? 0) || isExpanded)) {
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.className = "category-toggle";
+    toggleButton.textContent = isExpanded ? "Скрыть все" : "Показать все";
+    toggleButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (typeof onToggleCategory === "function") {
+        onToggleCategory(category.key);
+      }
+    });
+    section.appendChild(toggleButton);
+  }
+
   return section;
 }
 
@@ -223,12 +240,17 @@ function resetProductsView() {
   document.body.style.overflow = "";
 }
 
-function renderProducts(limit, onCategorySelect) {
+function renderProducts(limit, onCategorySelect, expandedCategoryKey = null, onToggleCategory = null) {
   resetProductsView();
   const container = document.getElementById("products-container");
   CATEGORIES.forEach((category) => {
     if (products[category.key]?.length) {
-      container.appendChild(renderCategorySection(category, limit, onCategorySelect));
+      container.appendChild(
+        renderCategorySection(category, limit, onCategorySelect, onToggleCategory, {
+          showToggle: Boolean(onToggleCategory),
+          isExpanded: expandedCategoryKey === category.key,
+        })
+      );
     }
   });
 }
@@ -243,7 +265,12 @@ function filterByCategory(categoryKey, limit, onCategorySelect) {
   if (!category) return;
 
   resetProductsView();
-  document.getElementById("products-container").appendChild(renderCategorySection(category, limit ?? null, onCategorySelect));
+  document.getElementById("products-container").appendChild(
+    renderCategorySection(category, limit ?? null, onCategorySelect, null, {
+      showToggle: false,
+      isExpanded: false,
+    })
+  );
 }
 
 function getDefaultLimit() {
@@ -331,15 +358,37 @@ function initBackToTop() {
 
 document.addEventListener("DOMContentLoaded", () => {
   let currentLimit = getDefaultLimit();
+  let expandedCategoryKey = null;
+  let restoreScrollPosition = null;
 
   const navigateToCategory = (categoryKey) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (categoryKey === "all") {
-      renderProducts(currentLimit, navigateToCategory);
+      expandedCategoryKey = null;
+      restoreScrollPosition = null;
+      renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
     } else {
       filterByCategory(categoryKey, null, navigateToCategory);
     }
+  };
+
+  const toggleCategoryView = (categoryKey) => {
+    const isCollapsing = expandedCategoryKey === categoryKey;
+
+    if (isCollapsing) {
+      expandedCategoryKey = null;
+      renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
+
+      if (restoreScrollPosition !== null) {
+        window.scrollTo({ top: restoreScrollPosition, behavior: "smooth" });
+      }
+      return;
+    }
+
+    restoreScrollPosition = window.scrollY;
+    expandedCategoryKey = categoryKey;
+    renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
   };
 
   initCategorySlider(navigateToCategory);
@@ -347,13 +396,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initPopoverDismissal();
   initBackToTop();
 
-  renderProducts(currentLimit, navigateToCategory);
+  renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
 
   window.addEventListener("resize", () => {
     const newLimit = getDefaultLimit();
     if (newLimit !== currentLimit) {
       currentLimit = newLimit;
-      renderProducts(currentLimit, navigateToCategory);
+      renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
     }
   });
 });

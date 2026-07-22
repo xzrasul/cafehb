@@ -556,6 +556,30 @@ header:hover {
     opacity: 1;
 }
 
+.category-toggle {
+    display: block;
+    margin: 18px auto 0;
+    padding: 10px 18px;
+    border: 1px solid rgba(53, 97, 192, 0.2);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #3561C0, #7B9CE5);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 20px rgba(53, 97, 192, 0.15);
+}
+
+.category-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(53, 97, 192, 0.22);
+}
+
+.category-toggle:focus-visible {
+    outline: none;
+}
+
 .category-title::after {
     content: '';
     position: absolute;
