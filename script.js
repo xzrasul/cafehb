@@ -1,16 +1,16 @@
 ﻿// Категории меню: ключ соответствует полю в products.js,
 // title — подпись в навигации/слайдере, icon — SVG для мобильного слайдера категорий.
 const CATEGORIES = [
-  { key: "drinks", title: "Напитки", icon: '<img src="content/Напитки/cafe hb.png" alt="">' },
-  { key: "breakfast", title: "Завтраки", icon: '<img src="content/Завтраки/Глазунья из 3 яиц.png" alt="">' },
-  { key: "salads", title: "Салаты", icon: '<img src="content/Салаты/Буратто с запечённый икрой.png" alt="">' },
-  { key: "soups", title: "Супы", icon: '<img src="content/Супы/Тыквенный крем-суп.png" alt="">' },
-  { key: "sandwiches", title: "Сендвичи", icon: '<img src="content/Cендвич/Сендвич с курицей и моцареллой.png" alt="">' },
-  { key: "burgers", title: "Бургеры", icon: '<img src="content/Бургеры/Бургер с говядиной.png" alt="">' },
-  { key: "dishes", title: "Горячие блюда", icon: '<img src="content/Горячие блюда/Жаркое с говядиной и овощами.png" alt="">' },
+  { key: "drinks", title: "Напитки", icon: '<img src="content/Напитки/cafe hb.webp" alt="">' },
+  { key: "breakfast", title: "Завтраки", icon: '<img src="content/Завтраки/Глазунья из 3 яиц.webp" alt="">' },
+  { key: "salads", title: "Салаты", icon: '<img src="content/Салаты/Буратто с запечённый икрой.webp" alt="">' },
+  { key: "soups", title: "Супы", icon: '<img src="content/Супы/Тыквенный крем-суп.webp" alt="">' },
+  { key: "sandwiches", title: "Сендвичи", icon: '<img src="content/Cендвич/Сендвич с курицей и моцареллой.webp" alt="">' },
+  { key: "burgers", title: "Бургеры", icon: '<img src="content/Бургеры/Бургер с говядиной.webp" alt="">' },
+  { key: "dishes", title: "Горячие блюда", icon: '<img src="content/Горячие блюда/Жаркое с говядиной и овощами.webp" alt="">' },
 ];
 
-const ALL_CATEGORIES_ICON = ' <img src="content/logo/LOGO.png" alt="">';
+const ALL_CATEGORIES_ICON = ' <img src="content/logo/LOGO.webp" alt="">';
 
 const MOBILE_BREAKPOINT = 720;
 const MOBILE_CARD_LIMIT = 4;
