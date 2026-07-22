@@ -5,17 +5,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="shortcut icon" href="contant/logo/LOGO.png" type="image/x-icon" />
+  <link rel="shortcut icon" href="content/logo/LOGO.png" type="image/x-icon" />
   <title>café hb
   </title>
 </head>
 
 <body>
   <div class="nav-mob">
-    <a class="join-a logo-m" href="drinks-showcase.html">
+    <a class="join-a logo-m" data-category="all" href="№">
       <h2>café
       </h2>
-      <img src="contant/logo/LOGO.png" alt="">
+      <img src="content/logo/LOGO.png" alt="">
     </a>
   </div>
   <header>
@@ -24,18 +24,20 @@
         <li><a href="#" class="hover:underline" data-category="sandwiches">Сендвичи</a></li>
         <li><a href="#" class="hover:underline" data-category="burgers">Бургеры</a></li>
         <li><a href="#" class="hover:underline" data-category="drinks">Напитки</a></li>
-        <li class="logo-d"><a href="drinks-showcase.html"><img src="contant/logo/LOGO.png" alt="Logo" /></a></li>
-        <li><a href="#" class="hover:underline" data-category="dishes">Блюда</a></li>
+        <li><a href="#" class="hover:underline" data-category="soups">Супы</a></li>
+        <li class="logo-d"><a href="#" data-category="all"><img src="content/logo/LOGO.png" alt="Logo" /></a></li>
+        <li><a href="#" class="hover:underline" data-category="dishes">Горячие блюда</a></li>
         <li><a href="#" class="hover:underline" data-category="salads">Салаты</a></li>
         <li><a href="#" class="hover:underline" data-category="breakfast">Завтраки</a></li>
       </ul>
     </nav>
   </header>
+  <div class="banner" data-category="all">
+    <img src="content/logo/Frame 1657005755.png" alt="">
+  </div>
   <div class="main">
     <div class="hero">
-      <p class="hero-title">Меню</p>
-      <p class="hero-subtitle">café hb
-        — вкусно по-другому</p>
+      <p class="hero-subtitle"><span>café hb </span>— вкусно по-другому</p>
     </div>
     <div class="category-slider" id="categorySlider"></div>
     <div id="products-container"></div>
@@ -57,7 +59,7 @@
       </div>
     </div>
   </footer>
-  <button class="back-to-top" id="backToTop" aria-label="Наверх"><img width="30px" src="contant/logo/backToTop.png"
+  <button class="back-to-top" id="backToTop" aria-label="Наверх"><img width="30px" src="content/logo/backToTop.png"
       alt=""></button>
   <script src="products.js"></script>
   <script src="script.js"></script>

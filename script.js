@@ -1,15 +1,16 @@
 ﻿// Категории меню: ключ соответствует полю в products.js,
 // title — подпись в навигации/слайдере, icon — SVG для мобильного слайдера категорий.
 const CATEGORIES = [
-  { key: "drinks", title: "Напитки", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>' },
-  { key: "burgers", title: "Бургеры", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5v1a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5Z"/><path d="M3 12h18l-1 6H4Z"/><path d="M4 18h16v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/></svg>' },
-  { key: "sandwiches", title: "Сендвичи", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a1 1 0 0 1 1 1v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a1 1 0 0 1 1-1Z"/><path d="M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><line x1="4" y1="15" x2="20" y2="15"/></svg>' },
-  { key: "salads", title: "Салаты", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10a2 2 0 0 0 2-2v-2H5v2a2 2 0 0 0 2 2Z"/><path d="M12 17V9"/><path d="M8 13l4-4 4 4"/><circle cx="12" cy="7" r="2"/></svg>' },
-  { key: "dishes", title: "Блюда", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>' },
-  { key: "breakfast", title: "Завтраки", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' },
+  { key: "drinks", title: "Напитки", icon: '<img src="content/Напитки/cafe hb.png" alt="">' },
+  { key: "breakfast", title: "Завтраки", icon: '<img src="content/Завтраки/Глазунья из 3 яиц.png" alt="">' },
+  { key: "salads", title: "Салаты", icon: '<img src="content/Салаты/Буратто с запечённый икрой.png" alt="">' },
+  { key: "soups", title: "Супы", icon: '<img src="content/Супы/Тыквенный крем-суп.png" alt="">' },
+  { key: "sandwiches", title: "Сендвичи", icon: '<img src="content/Cендвич/Сендвич с курицей и моцареллой.png" alt="">' },
+  { key: "burgers", title: "Бургеры", icon: '<img src="content/Бургеры/Бургер с говядиной.png" alt="">' },
+  { key: "dishes", title: "Горячие блюда", icon: '<img src="content/Горячие блюда/Жаркое с говядиной и овощами.png" alt="">' },
 ];
 
-const ALL_CATEGORIES_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="#3561C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>';
+const ALL_CATEGORIES_ICON = ' <img src="content/logo/LOGO.png" alt="">';
 
 const MOBILE_BREAKPOINT = 720;
 const MOBILE_CARD_LIMIT = 4;
@@ -61,6 +62,17 @@ function createPopupId(categoryKey, product) {
   return `${categoryKey}-${product.id}`.replace(/\s+/g, "-");
 }
 
+function getProductVolume(product) {
+  if (product.volume) return product.volume;
+
+  const match = product.name.match(/(\d+)\s*(мл|ml)/i);
+  if (!match) return "";
+
+  const value = match[1];
+  const unit = match[2].toLowerCase() === "ml" ? "ml" : "мл";
+  return `${value} ${unit}`;
+}
+
 function createProductPopup(product, popupId) {
   const imageWrap = document.createElement("div");
   imageWrap.className = "popUp-image-wrap";
@@ -73,9 +85,21 @@ function createProductPopup(product, popupId) {
   price.className = "popUp-price";
   price.textContent = `${product.price} c`;
 
+  const meta = document.createElement("div");
+  meta.className = "popUp-meta";
+  meta.appendChild(price);
+
+  const volumeText = getProductVolume(product);
+  if (volumeText) {
+    const volume = document.createElement("span");
+    volume.className = "popUp-volume";
+    volume.textContent = volumeText;
+    meta.appendChild(volume);
+  }
+
   const body = document.createElement("div");
   body.className = "popUp-body";
-  body.append(title, price);
+  body.append(title, meta);
 
   if (product.description) {
     const description = document.createElement("p");
