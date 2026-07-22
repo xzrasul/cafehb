@@ -533,12 +533,27 @@ header:hover {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin: 0 0 25px 0;
+    margin: 0 auto 25px auto;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 2px;
     position: relative;
-    padding-bottom: 15px;
+    padding: 0 0 15px 0;
+    border: none;
+    background-color: transparent;
+    display: block;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.category-title:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.category-title:focus-visible {
+    outline: none;
+    opacity: 1;
 }
 
 .category-title::after {

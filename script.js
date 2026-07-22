@@ -187,14 +187,21 @@ function createProductCard(product, categoryKey) {
 
 /* ---------- Рендер секций и списка товаров ---------- */
 
-function renderCategorySection(category, limit) {
+function renderCategorySection(category, limit, onCategorySelect) {
   const showingAll = limit == null;
   const items = products[category.key] || [];
   const visibleItems = showingAll ? items : items.slice(0, limit);
 
-  const title = document.createElement("h2");
+  const title = document.createElement("button");
+  title.type = "button";
   title.className = "category-title";
   title.textContent = category.title;
+  title.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (typeof onCategorySelect === "function") {
+      onCategorySelect(category.key);
+    }
+  });
 
   const cardsContainer = document.createElement("div");
   cardsContainer.className = showingAll ? "cards-container full-mobile" : "cards-container";
@@ -216,19 +223,19 @@ function resetProductsView() {
   document.body.style.overflow = "";
 }
 
-function renderProducts(limit) {
+function renderProducts(limit, onCategorySelect) {
   resetProductsView();
   const container = document.getElementById("products-container");
   CATEGORIES.forEach((category) => {
     if (products[category.key]?.length) {
-      container.appendChild(renderCategorySection(category, limit));
+      container.appendChild(renderCategorySection(category, limit, onCategorySelect));
     }
   });
 }
 
-function filterByCategory(categoryKey, limit) {
+function filterByCategory(categoryKey, limit, onCategorySelect) {
   if (categoryKey === "all") {
-    renderProducts(limit ?? getDefaultLimit());
+    renderProducts(limit ?? getDefaultLimit(), onCategorySelect);
     return;
   }
 
@@ -236,7 +243,7 @@ function filterByCategory(categoryKey, limit) {
   if (!category) return;
 
   resetProductsView();
-  document.getElementById("products-container").appendChild(renderCategorySection(category, limit ?? null));
+  document.getElementById("products-container").appendChild(renderCategorySection(category, limit ?? null, onCategorySelect));
 }
 
 function getDefaultLimit() {
@@ -326,10 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentLimit = getDefaultLimit();
 
   const navigateToCategory = (categoryKey) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     if (categoryKey === "all") {
-      renderProducts(currentLimit);
+      renderProducts(currentLimit, navigateToCategory);
     } else {
-      filterByCategory(categoryKey, null);
+      filterByCategory(categoryKey, null, navigateToCategory);
     }
   };
 
@@ -338,13 +347,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initPopoverDismissal();
   initBackToTop();
 
-  renderProducts(currentLimit);
+  renderProducts(currentLimit, navigateToCategory);
 
   window.addEventListener("resize", () => {
     const newLimit = getDefaultLimit();
     if (newLimit !== currentLimit) {
       currentLimit = newLimit;
-      renderProducts(currentLimit);
+      renderProducts(currentLimit, navigateToCategory);
     }
   });
 });
