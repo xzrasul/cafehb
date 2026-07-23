@@ -354,6 +354,68 @@ function initBackToTop() {
   });
 }
 
+function getTableNumber() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("table"); // например ?table=3
+}
+
+const TELEGRAM_BOT_TOKEN = "8900105881:AAGZLy7-sB_z7-tAzHdIACPCwUpXvLXhubY";
+const TELEGRAM_CHAT_ID = "-1004410311353";
+
+function getTableNumber() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("table"); // например ?table=3
+}
+
+async function sendWaiterCall(tableNumber) {
+  const text = `🔔 Столик №${tableNumber} просит официанта`;
+
+  const response = await fetch(
+    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text,
+      }),
+    }
+  );
+
+  const data = await response.json();
+  if (!data.ok) throw new Error("Telegram API error");
+}
+
+function initCallWaiter() {
+  const button = document.getElementById("callWaiterBtn");
+  if (!button) return;
+
+  const tableNumber = getTableNumber();
+
+  if (!tableNumber) {
+    button.style.display = "none";
+    return;
+  }
+
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    button.textContent = "Отправляем...";
+
+    try {
+      await sendWaiterCall(tableNumber);
+      button.textContent = "✅ Официант уже идёт";
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = "🔔 Позвать официанта";
+      }, 15000);
+    } catch (err) {
+      console.error(err);
+      button.textContent = "Ошибка, попробуйте ещё раз";
+      button.disabled = false;
+    }
+  });
+}
+
 /* ---------- Инициализация ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -395,6 +457,43 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavLinks(navigateToCategory);
   initPopoverDismissal();
   initBackToTop();
+  function initCallWaiter() {
+    const button = document.getElementById("callWaiterBtn");
+    if (!button) return;
+
+    const tableNumber = getTableNumber();
+
+    // Если номера стола нет в ссылке — кнопку не показываем
+    if (!tableNumber) {
+      button.style.display = "none";
+      return;
+    }
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      button.textContent = "Отправляем...";
+
+      try {
+        const response = await fetch("/api/call-waiter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ table: tableNumber }),
+        });
+
+        if (!response.ok) throw new Error("Ошибка отправки");
+
+        button.textContent = "✅ Официант уже идёт";
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = "🔔 Позвать официанта";
+        }, 15000); // повторно вызвать можно через 15 секунд
+      } catch (err) {
+        console.error(err);
+        button.textContent = "Ошибка, попробуйте ещё раз";
+        button.disabled = false;
+      }
+    });
+  }
 
   renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);
 
