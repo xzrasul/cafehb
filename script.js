@@ -354,85 +354,38 @@ function initBackToTop() {
   });
 }
 
-/* ---------- Вызов официанта через Telegram ---------- */
-
-const TELEGRAM_BOT_TOKEN = "8900105881:AAGZLy7-sB_z7-tAzHdIACPCwUpXvLXhubY";
-const TELEGRAM_CHAT_ID = "-1004410311353";
-
-function getTableNumber() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("table"); // например ?table=3
-}
-
-async function sendWaiterCall(tableNumber) {
-  const text = `🔔 Столик №${tableNumber} просит официанта`;
-
-  const response = await fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text,
-      }),
-    }
-  );
-
-  const data = await response.json();
-  if (!data.ok) throw new Error("Telegram API error");
-}
-
 /* ---------- Рейтинговая система ---------- */
 
-async function sendRating(tableNumber, stars) {
-  const starEmojis = "⭐".repeat(stars);
-  const text = `⭐${stars} Столик №${tableNumber} оценил обслуживание: ${starEmojis}`;
-
-  const response = await fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text,
-      }),
-    }
-  );
+async function sendRating(stars) {
+  const response = await fetch("/api/rate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ stars }),
+  });
 
   const data = await response.json();
   if (!data.ok) throw new Error("Failed to send rating");
 }
 
-function saveRatingToStorage(tableNumber, stars) {
-  // Сохраняем оценку в localStorage
-  const ratings = JSON.parse(localStorage.getItem("waiterRatings") || "{}");
-  if (!ratings[tableNumber]) {
-    ratings[tableNumber] = [];
-  }
-  ratings[tableNumber].push({
+function saveRatingToStorage(stars) {
+  const ratings = JSON.parse(localStorage.getItem("cafeRatings") || "[]");
+  ratings.push({
     stars: stars,
     timestamp: new Date().toISOString(),
   });
-  localStorage.setItem("waiterRatings", JSON.stringify(ratings));
+  localStorage.setItem("cafeRatings", JSON.stringify(ratings));
 }
 
-function showRatingForm(tableNumber) {
+function showRatingForm() {
   const overlay = document.getElementById("ratingOverlay");
   const form = document.getElementById("ratingForm");
 
   if (!overlay || !form) return;
 
-  // Сохраняем номер стола в data атрибут
-  form.dataset.table = tableNumber;
-
-  // Сбрасываем выбранные звёзды
   document.querySelectorAll(".rating-star").forEach((star) => {
     star.classList.remove("active");
   });
 
-  // Показываем форму
   overlay.classList.add("active");
   document.body.style.overflow = "hidden";
 }
@@ -444,12 +397,10 @@ function hideRatingForm() {
   overlay.classList.remove("active");
   document.body.style.overflow = "";
 
-  // Возвращаем кнопку в исходное состояние
-  const button = document.getElementById("callWaiterBtn");
+  const button = document.getElementById("ratingBtn");
   if (button) {
     button.disabled = false;
-    button.textContent = "🔔 Позвать официанта";
-    button.dataset.mode = "call";
+    button.textContent = "⭐ Оценить нас";
   }
 }
 
@@ -464,12 +415,10 @@ function initRatingForm() {
 
   let selectedRating = 0;
 
-  // Клик по звёздам
   stars.forEach((star) => {
     star.addEventListener("click", () => {
       selectedRating = parseInt(star.dataset.rating);
 
-      // Подсветить звёзды до выбранной
       stars.forEach((s) => {
         if (parseInt(s.dataset.rating) <= selectedRating) {
           s.classList.add("active");
@@ -478,46 +427,26 @@ function initRatingForm() {
         }
       });
     });
-
-    // Эффект при наведении
-    star.addEventListener("mouseenter", () => {
-      const hoverRating = parseInt(star.dataset.rating);
-      stars.forEach((s) => {
-        if (parseInt(s.dataset.rating) <= hoverRating) {
-          s.classList.add("hover");
-        } else {
-          s.classList.remove("hover");
-        }
-      });
-    });
   });
 
-  // Убрать эффект при наведении когда курсор уходит
   form.addEventListener("mouseleave", () => {
     stars.forEach((s) => {
       s.classList.remove("hover");
-      if (parseInt(s.dataset.rating) <= selectedRating) {
-        s.classList.add("active");
-      } else {
-        s.classList.remove("active");
-      }
     });
   });
 
-  // Отправка оценки
   submitBtn.addEventListener("click", async () => {
     if (selectedRating === 0) {
       alert("Пожалуйста, выберите оценку");
       return;
     }
 
-    const tableNumber = form.dataset.table;
     submitBtn.disabled = true;
     submitBtn.textContent = "Отправляем...";
 
     try {
-      await sendRating(tableNumber, selectedRating);
-      saveRatingToStorage(tableNumber, selectedRating);
+      await sendRating(selectedRating);
+      saveRatingToStorage(selectedRating);
 
       submitBtn.textContent = "✅ Спасибо за оценку!";
       setTimeout(() => {
@@ -530,13 +459,11 @@ function initRatingForm() {
     }
   });
 
-  // Закрытие формы
   closeBtn.addEventListener("click", hideRatingForm);
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) hideRatingForm();
   });
 
-  // Закрытие по Escape
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && overlay.classList.contains("active")) {
       hideRatingForm();
@@ -544,45 +471,13 @@ function initRatingForm() {
   });
 }
 
-function initCallWaiter() {
-  const button = document.getElementById("callWaiterBtn");
+/* ---------- Кнопка оценки ---------- */
+
+function initRatingButton() {
+  const button = document.getElementById("ratingBtn");
   if (!button) return;
 
-  const tableNumber = getTableNumber();
-
-  // Если номера стола нет в ссылке — кнопку не показываем
-  if (!tableNumber) {
-    button.style.display = "none";
-    return;
-  }
-
-  // Инициализируем режим кнопки
-  button.dataset.mode = "call";
-  button.dataset.tableNumber = tableNumber;
-
-  button.addEventListener("click", async () => {
-    // Режим 1: Вызвать официанта
-    if (button.dataset.mode === "call") {
-      button.disabled = true;
-      button.textContent = "Отправляем...";
-
-      try {
-        await sendWaiterCall(tableNumber);
-        // Успешно отправили — переходим в режим оценки
-        button.textContent = "⭐ Оценить обслуживание";
-        button.dataset.mode = "rate";
-        button.disabled = false;
-      } catch (err) {
-        console.error(err);
-        button.textContent = "❌ Ошибка, попробуйте ещё раз";
-        button.disabled = false;
-      }
-    }
-    // Режим 2: Показать форму оценки
-    else if (button.dataset.mode === "rate") {
-      showRatingForm(tableNumber);
-    }
-  });
+  button.addEventListener("click", showRatingForm);
 }
 
 /* ---------- Инициализация ---------- */
@@ -626,7 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavLinks(navigateToCategory);
   initPopoverDismissal();
   initBackToTop();
-  initCallWaiter();
+  initRatingButton();
   initRatingForm();
 
   renderProducts(currentLimit, navigateToCategory, expandedCategoryKey, toggleCategoryView);

@@ -1167,9 +1167,9 @@ footer::before {
     transition: color 0.3s ease;
 }
 
-/* Вставить в style.css, рядом с .back-to-top */
+/* Кнопка оценки */
 
-.call-waiter-btn {
+.rating-btn {
     position: fixed;
     bottom: 30px;
     left: 30px;
@@ -1190,23 +1190,23 @@ footer::before {
     gap: 8px;
 }
 
-.call-waiter-btn:hover {
+.rating-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 25px rgba(53, 97, 192, 0.4);
 }
 
-.call-waiter-btn:active {
+.rating-btn:active {
     transform: translateY(0) scale(0.95);
 }
 
-.call-waiter-btn:disabled {
+.rating-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
 }
 
 @media (max-width: 720px) {
-    .call-waiter-btn {
+    .rating-btn {
         bottom: 20px;
         left: 20px;
         padding: 10px 16px;
@@ -1214,7 +1214,7 @@ footer::before {
         border-radius: 24px;
     }
 
-    .call-waiter-btn:hover {
+    .rating-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(53, 97, 192, 0.3);
     }
@@ -1327,8 +1327,7 @@ footer::before {
     user-select: none;
 }
 
-.rating-star:hover,
-.rating-star.hover {
+.rating-star:hover {
     transform: scale(1.15);
     filter: grayscale(0%) opacity(1);
 }
@@ -1409,14 +1408,5 @@ footer::before {
         padding: 12px 20px;
         font-size: 15px;
         border-radius: 10px;
-    }
-}
-
-@media (max-width: 720px) {
-    .call-waiter-btn {
-        left: 20px;
-        bottom: 20px;
-        padding: 10px 16px;
-        font-size: 13px;
     }
 }
