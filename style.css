@@ -1185,6 +1185,9 @@ footer::before {
     box-shadow: 0 4px 15px rgba(53, 97, 192, 0.25);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .call-waiter-btn:hover {
@@ -1192,10 +1195,221 @@ footer::before {
     box-shadow: 0 6px 25px rgba(53, 97, 192, 0.4);
 }
 
+.call-waiter-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
 .call-waiter-btn:disabled {
     opacity: 0.7;
-    cursor: default;
+    cursor: not-allowed;
     transform: none;
+}
+
+@media (max-width: 720px) {
+    .call-waiter-btn {
+        bottom: 20px;
+        left: 20px;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 24px;
+    }
+
+    .call-waiter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(53, 97, 192, 0.3);
+    }
+}
+
+/* ---------- Рейтинговая система ---------- */
+
+.rating-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(26, 42, 78, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.rating-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rating-form {
+    position: relative;
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 60px rgba(53, 97, 192, 0.25);
+    text-align: center;
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 400px;
+    width: 90%;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.rating-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3561C0, #4A7BE0);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(53, 97, 192, 0.2);
+}
+
+.rating-close:hover {
+    transform: scale(1.1);
+}
+
+.rating-close:active {
+    transform: scale(0.95);
+}
+
+.rating-header {
+    margin-bottom: 24px;
+}
+
+.rating-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px;
+    letter-spacing: 0.5px;
+}
+
+.rating-header p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    font-weight: 400;
+}
+
+.rating-stars-container {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 28px 0 32px;
+}
+
+.rating-star {
+    font-size: 48px;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    filter: grayscale(100%) opacity(0.5);
+    user-select: none;
+}
+
+.rating-star:hover,
+.rating-star.hover {
+    transform: scale(1.15);
+    filter: grayscale(0%) opacity(1);
+}
+
+.rating-star.active {
+    transform: scale(1.1);
+    filter: grayscale(0%) opacity(1);
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+.rating-submit-btn {
+    width: 100%;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3561C0, #4A7BE0);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'FixelText', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(53, 97, 192, 0.25);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rating-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(53, 97, 192, 0.35);
+}
+
+.rating-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.rating-submit-btn:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .rating-form {
+        padding: 32px 20px;
+        border-radius: 20px;
+    }
+
+    .rating-header h3 {
+        font-size: 20px;
+    }
+
+    .rating-header p {
+        font-size: 13px;
+    }
+
+    .rating-stars-container {
+        gap: 12px;
+        margin: 20px 0 28px;
+    }
+
+    .rating-star {
+        font-size: 40px;
+    }
+
+    .rating-submit-btn {
+        padding: 12px 20px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
 }
 
 @media (max-width: 720px) {

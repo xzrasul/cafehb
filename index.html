@@ -63,6 +63,31 @@
   <button class="call-waiter-btn" id="callWaiterBtn" aria-label="Позвать официанта">
     🔔 Позвать официанта
   </button>
+
+  <!-- Форма оценки обслуживания -->
+  <div class="rating-overlay" id="ratingOverlay">
+    <div class="rating-form" id="ratingForm">
+      <button class="rating-close" id="closeRatingBtn" aria-label="Закрыть">×</button>
+
+      <div class="rating-header">
+        <h3>Как вас обслужили?</h3>
+        <p>Ваша оценка помогает нам улучшать сервис</p>
+      </div>
+
+      <div class="rating-stars-container">
+        <span class="rating-star" data-rating="1">⭐</span>
+        <span class="rating-star" data-rating="2">⭐</span>
+        <span class="rating-star" data-rating="3">⭐</span>
+        <span class="rating-star" data-rating="4">⭐</span>
+        <span class="rating-star" data-rating="5">⭐</span>
+      </div>
+
+      <button class="rating-submit-btn" id="submitRatingBtn">
+        Отправить оценку
+      </button>
+    </div>
+  </div>
+
   <script src="products.js"></script>
   <script src="script.js"></script>
 </body>
