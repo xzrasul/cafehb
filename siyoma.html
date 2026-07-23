@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="content/logo/LOGO.webp" type="image/x-icon" />
+  <title>café hb — Напитки</title>
+</head>
+
+<body class="page-drinks">
+  <div class="nav-mob">
+    <a class="join-a logo-m" href="/">
+      <h2>café</h2>
+      <img src="content/logo/LOGO.webp" alt="Logo">
+    </a>
+  </div>
+  <header>
+    <nav>
+      <ul class="mainNav">
+        <li class="logo-d"><a href="/"><img src="content/logo/LOGO.webp" alt="Logo" /></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="main">
+    <div class="hero">
+      <p class="hero-subtitle"><span>café hb </span>— Напитки</p>
+    </div>
+    <div id="products-container"></div>
+  </div>
+  <footer>
+    <div class="footer">
+      <div class="footer-logo">
+        <div class="ft-logo">
+          <h2>café hb</h2>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>
+          <a target="_blank" href="https://www.instagram.com/cafe.hb_dushanbe/">Instagram</a>
+        </p>
+        <a href="tel:+992940909009">+992 940 90 90 09</a>
+        <p>© café hb</p>
+        <p class="info-creator">created by <a target="_blank" href="https://xzrasul.vercel.app">xzrasul</a></p>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" id="backToTop" aria-label="Наверх"><img width="30px" src="content/logo/backToTop.webp"
+      alt=""></button>
+  <button class="rating-btn" id="ratingBtn" aria-label="Оценить">
+    ⭐ Оценить нас
+  </button>
+
+  <div class="rating-overlay" id="ratingOverlay">
+    <div class="rating-form" id="ratingForm">
+      <button class="rating-close" id="closeRatingBtn" aria-label="Закрыть">×</button>
+      <div class="rating-header">
+        <h3>Оцените нас</h3>
+        <p>Ваша оценка помогает нам улучшать сервис</p>
+      </div>
+      <div class="rating-stars-container">
+        <span class="rating-star" data-rating="1">⭐</span>
+        <span class="rating-star" data-rating="2">⭐</span>
+        <span class="rating-star" data-rating="3">⭐</span>
+        <span class="rating-star" data-rating="4">⭐</span>
+        <span class="rating-star" data-rating="5">⭐</span>
+      </div>
+      <button class="rating-submit-btn" id="submitRatingBtn">
+        Отправить оценку
+      </button>
+    </div>
+  </div>
+
+  <script src="products.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("products-container");
+      const drinks = products["drinks"] || [];
+
+      const section = document.createElement("section");
+      section.className = "category-section";
+
+      const title = document.createElement("h2");
+      title.className = "category-title";
+      title.textContent = "Напитки";
+
+      const cards = document.createElement("div");
+      cards.className = "cards-container full-mobile";
+
+      drinks.forEach((product) => {
+        const card = document.createElement("div");
+        card.className = product.size === "mini" ? "card card-mini" : "card";
+
+        const btn = document.createElement("button");
+        btn.className = "popUp-btn";
+        if (product.image) {
+          const img = document.createElement("img");
+          img.src = product.image;
+          img.alt = product.name;
+          btn.appendChild(img);
+        }
+        const h3 = document.createElement("h3");
+        h3.textContent = product.name;
+        const price = document.createElement("span");
+        price.className = "price-badge";
+        price.textContent = `${product.price} c`;
+        btn.append(h3, price);
+
+        const popupId = `drinks-${product.id}`.replace(/\s+/g, "-");
+
+        const imageWrap = document.createElement("div");
+        imageWrap.className = "popUp-image-wrap";
+        if (product.image) {
+          const img = document.createElement("img");
+          img.src = product.image;
+          img.alt = product.name;
+          imageWrap.appendChild(img);
+        }
+
+        const pTitle = document.createElement("h3");
+        pTitle.textContent = product.name;
+
+        const pPrice = document.createElement("span");
+        pPrice.className = "popUp-price";
+        pPrice.textContent = `${product.price} c`;
+
+        const meta = document.createElement("div");
+        meta.className = "popUp-meta";
+        meta.appendChild(pPrice);
+
+        const match = product.name.match(/(\d+)\s*(мл|ml)/i);
+        if (match) {
+          const vol = document.createElement("span");
+          vol.className = "popUp-volume";
+          vol.textContent = match[2].toLowerCase() === "ml" ? `${match[1]} ml` : `${match[1]} мл`;
+          meta.appendChild(vol);
+        }
+
+        const body = document.createElement("div");
+        body.className = "popUp-body";
+        body.append(pTitle, meta);
+        if (product.description) {
+          const desc = document.createElement("p");
+          desc.className = "popUp-description";
+          desc.textContent = product.description;
+          body.appendChild(desc);
+        }
+
+        const scroll = document.createElement("div");
+        scroll.className = "popUp-scroll";
+        scroll.append(imageWrap, body);
+
+        const handle = document.createElement("div");
+        handle.className = "popUp-handle";
+
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "popUp-close";
+        closeBtn.setAttribute("aria-label", "Закрыть");
+        closeBtn.textContent = "×";
+        closeBtn.addEventListener("click", () => {
+          overlay.classList.remove("active");
+          document.body.style.overflow = "";
+        });
+
+        const sheet = document.createElement("div");
+        sheet.className = "popUp-sheet";
+        sheet.append(closeBtn, handle, scroll);
+
+        const overlay = document.createElement("div");
+        overlay.className = "popUp-overlay";
+        overlay.id = popupId;
+        overlay.appendChild(sheet);
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            overlay.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+
+        btn.addEventListener("click", () => {
+          overlay.classList.remove("closing");
+          overlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+
+        card.appendChild(btn);
+        container.appendChild(overlay);
+        cards.appendChild(card);
+      });
+
+      section.append(title, cards);
+      container.appendChild(section);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const active = document.querySelector(".popUp-overlay.active");
+          if (active) {
+            active.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        }
+      });
+
+      const backBtn = document.getElementById("backToTop");
+      if (backBtn) {
+        window.addEventListener("scroll", () => {
+          backBtn.classList.toggle("visible", window.scrollY > 400);
+        });
+        backBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      const ratingBtn = document.getElementById("ratingBtn");
+      if (ratingBtn) {
+        ratingBtn.addEventListener("click", () => {
+          document.getElementById("ratingOverlay").classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+      }
+
+      const closeRating = document.getElementById("closeRatingBtn");
+      const ratingOverlay = document.getElementById("ratingOverlay");
+      const ratingStars = document.querySelectorAll(".rating-star");
+      const submitBtn = document.getElementById("submitRatingBtn");
+
+      let selectedRating = 0;
+
+      ratingStars.forEach((star) => {
+        star.addEventListener("click", () => {
+          selectedRating = parseInt(star.dataset.rating);
+          ratingStars.forEach((s) => {
+            s.classList.toggle("active", parseInt(s.dataset.rating) <= selectedRating);
+          });
+        });
+      });
+
+      if (closeRating) {
+        closeRating.addEventListener("click", () => {
+          ratingOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+        });
+      }
+      if (ratingOverlay) {
+        ratingOverlay.addEventListener("click", (e) => {
+          if (e.target === ratingOverlay) {
+            ratingOverlay.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+      }
+      if (submitBtn) {
+        submitBtn.addEventListener("click", async () => {
+          if (selectedRating === 0) {
+            alert("Пожалуйста, выберите оценку");
+            return;
+          }
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Отправляем...";
+          try {
+            const res = await fetch("/api/rate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ stars: selectedRating }),
+            });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.error || "Failed");
+            const ratings = JSON.parse(localStorage.getItem("cafeRatings") || "[]");
+            ratings.push({ stars: selectedRating, timestamp: new Date().toISOString() });
+            localStorage.setItem("cafeRatings", JSON.stringify(ratings));
+            submitBtn.textContent = "✅ Спасибо за оценку!";
+            setTimeout(() => {
+              ratingOverlay.classList.remove("active");
+              document.body.style.overflow = "";
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Отправить оценку";
+            }, 2000);
+          } catch (err) {
+            console.error(err);
+            submitBtn.textContent = "❌ Ошибка отправки";
+            submitBtn.disabled = false;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
