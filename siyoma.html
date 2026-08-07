@@ -77,6 +77,10 @@
 
   <script src="products.js"></script>
   <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
       const container = document.getElementById("products-container");
       const drinks = products["drinks"] || [];
