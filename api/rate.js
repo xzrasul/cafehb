@@ -5,16 +5,17 @@ export default async function handler(req, res) {
 
     const { stars, comment } = req.body;
 
-    if (!stars || stars < 1 || stars > 5) {
+    if (stars !== undefined && (stars < 0 || stars > 5)) {
         return res.status(400).json({ error: "Invalid rating" });
     }
 
     const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const starEmojis = "⭐".repeat(stars);
+    const ratingText = stars ? `⭐${stars} ` : "";
+    const starEmojis = stars ? "⭐".repeat(stars) : "";
     const commentText = comment ? `\n💬 ${comment}` : "";
-    const text = `⭐${stars} Оценка кафе: ${starEmojis}${commentText}`;
+    const text = `${ratingText}Оценка кафе: ${starEmojis}${commentText}`.trim();
 
     const response = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,

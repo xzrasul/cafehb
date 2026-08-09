@@ -69,7 +69,8 @@
         <span class="rating-star" data-rating="4">⭐</span>
         <span class="rating-star" data-rating="5">⭐</span>
       </div>
-      <button class="rating-submit-btn" id="submitRatingBtn">
+      <textarea class="rating-comment" id="ratingComment" rows="4" placeholder="Напишите ваш отзыв"></textarea>
+      <button class="rating-submit-btn" id="submitRatingBtn" disabled>
         Отправить оценку
       </button>
     </div>
@@ -231,8 +232,17 @@
       const ratingOverlay = document.getElementById("ratingOverlay");
       const ratingStars = document.querySelectorAll(".rating-star");
       const submitBtn = document.getElementById("submitRatingBtn");
+      const commentInput = document.getElementById("ratingComment");
 
       let selectedRating = 0;
+
+      const updateSubmitButtonState = () => {
+        const hasComment = commentInput.value.trim().length > 0;
+        const hasRating = selectedRating > 0;
+        submitBtn.disabled = !hasComment && !hasRating;
+      };
+
+      submitBtn.disabled = true;
 
       ratingStars.forEach((star) => {
         star.addEventListener("click", () => {
@@ -240,8 +250,13 @@
           ratingStars.forEach((s) => {
             s.classList.toggle("active", parseInt(s.dataset.rating) <= selectedRating);
           });
+          updateSubmitButtonState();
         });
       });
+
+      if (commentInput) {
+        commentInput.addEventListener("input", updateSubmitButtonState);
+      }
 
       if (closeRating) {
         closeRating.addEventListener("click", () => {
@@ -259,27 +274,34 @@
       }
       if (submitBtn) {
         submitBtn.addEventListener("click", async () => {
-          if (selectedRating === 0) {
-            alert("Пожалуйста, выберите оценку");
+          const comment = commentInput ? commentInput.value.trim() : "";
+          const finalRating = selectedRating || 0;
+
+          if (!comment && !finalRating) {
             return;
           }
+
           submitBtn.disabled = true;
           submitBtn.textContent = "Отправляем...";
           try {
             const res = await fetch("/api/rate", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ stars: selectedRating }),
+              body: JSON.stringify({ stars: finalRating, comment }),
             });
             const data = await res.json();
             if (!data.ok) throw new Error(data.error || "Failed");
             const ratings = JSON.parse(localStorage.getItem("cafeRatings") || "[]");
-            ratings.push({ stars: selectedRating, timestamp: new Date().toISOString() });
+            ratings.push({ stars: finalRating, comment, timestamp: new Date().toISOString() });
             localStorage.setItem("cafeRatings", JSON.stringify(ratings));
             submitBtn.textContent = "✅ Спасибо за оценку!";
             setTimeout(() => {
               ratingOverlay.classList.remove("active");
               document.body.style.overflow = "";
+              commentInput.value = "";
+              selectedRating = 0;
+              ratingStars.forEach((s) => s.classList.remove("active"));
+              updateSubmitButtonState();
               submitBtn.disabled = false;
               submitBtn.textContent = "Отправить оценку";
             }, 2000);

@@ -418,6 +418,15 @@ function initRatingForm() {
   if (!overlay || !form || !commentInput) return;
 
   let selectedRating = 0;
+  const updateSubmitButtonState = () => {
+    const hasComment = commentInput.value.trim().length > 0;
+    const hasRating = selectedRating > 0;
+    submitBtn.disabled = !hasComment && !hasRating;
+    submitBtn.textContent = submitBtn.disabled ? "Отправить оценку" : "Отправить оценку";
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Отправить оценку";
 
   stars.forEach((star) => {
     star.addEventListener("click", () => {
@@ -430,8 +439,11 @@ function initRatingForm() {
           s.classList.remove("active");
         }
       });
+      updateSubmitButtonState();
     });
   });
+
+  commentInput.addEventListener("input", updateSubmitButtonState);
 
   form.addEventListener("mouseleave", () => {
     stars.forEach((s) => {
@@ -440,18 +452,19 @@ function initRatingForm() {
   });
 
   submitBtn.addEventListener("click", async () => {
-    if (selectedRating === 0) {
-      alert("Пожалуйста, выберите оценку");
+    const comment = commentInput.value.trim();
+    const finalRating = selectedRating || 0;
+
+    if (!comment && !finalRating) {
       return;
     }
 
-    const comment = commentInput.value.trim();
     submitBtn.disabled = true;
     submitBtn.textContent = "Отправляем...";
 
     try {
-      await sendRating(selectedRating, comment);
-      saveRatingToStorage(selectedRating, comment);
+      await sendRating(finalRating, comment);
+      saveRatingToStorage(finalRating, comment);
 
       submitBtn.textContent = "✅ Спасибо за оценку!";
       setTimeout(() => {
