@@ -70,6 +70,8 @@
         <span class="rating-star" data-rating="5">⭐</span>
       </div>
       <textarea class="rating-comment" id="ratingComment" rows="4" placeholder="Напишите ваш отзыв"></textarea>
+      <input class="rating-honeypot" id="ratingHoney" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"
+        style="position:absolute; left:-9999px; opacity:0;" />
       <button class="rating-submit-btn" id="submitRatingBtn" disabled>
         Отправить оценку
       </button>
@@ -233,13 +235,17 @@
       const ratingStars = document.querySelectorAll(".rating-star");
       const submitBtn = document.getElementById("submitRatingBtn");
       const commentInput = document.getElementById("ratingComment");
+      const honeypotInput = document.getElementById("ratingHoney");
 
       let selectedRating = 0;
+      let isCooldownActive = false;
+      const COOLDOWN_MS = 30000;
 
       const updateSubmitButtonState = () => {
         const hasComment = commentInput.value.trim().length > 0;
         const hasRating = selectedRating > 0;
-        submitBtn.disabled = !hasComment && !hasRating;
+        submitBtn.disabled = isCooldownActive || (!hasComment && !hasRating);
+        submitBtn.textContent = isCooldownActive ? "Подождите..." : "Отправить оценку";
       };
 
       submitBtn.disabled = true;
@@ -281,6 +287,15 @@
             return;
           }
 
+          if (honeypotInput && honeypotInput.value.trim()) {
+            return;
+          }
+
+          if (isCooldownActive) {
+            return;
+          }
+
+          isCooldownActive = true;
           submitBtn.disabled = true;
           submitBtn.textContent = "Отправляем...";
           try {
@@ -309,7 +324,14 @@
             console.error(err);
             submitBtn.textContent = "❌ Ошибка отправки";
             submitBtn.disabled = false;
+            isCooldownActive = false;
+            updateSubmitButtonState();
           }
+
+          setTimeout(() => {
+            isCooldownActive = false;
+            updateSubmitButtonState();
+          }, COOLDOWN_MS);
         });
       }
     });

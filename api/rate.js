@@ -1,13 +1,36 @@
+const RATE_LIMIT_WINDOW_MS = 30000;
+const rateLimitStore = globalThis.__ratingRateLimit || (globalThis.__ratingRateLimit = new Map());
+
+function getClientIp(req) {
+    const forwarded = req.headers["x-forwarded-for"] || req.headers["x-real-ip"];
+    const rawIp = Array.isArray(forwarded) ? forwarded[0] : forwarded;
+    return (rawIp || "unknown").split(",")[0].trim();
+}
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { stars, comment } = req.body;
+    const { stars, comment, honeypot } = req.body || {};
+
+    if (honeypot) {
+        return res.status(400).json({ error: "Spam detected" });
+    }
 
     if (stars !== undefined && (stars < 0 || stars > 5)) {
         return res.status(400).json({ error: "Invalid rating" });
     }
+
+    const ip = getClientIp(req);
+    const now = Date.now();
+    const lastRequestAt = rateLimitStore.get(ip) || 0;
+
+    if (now - lastRequestAt < RATE_LIMIT_WINDOW_MS) {
+        return res.status(429).json({ error: "Too many requests" });
+    }
+
+    rateLimitStore.set(ip, now);
 
     const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;

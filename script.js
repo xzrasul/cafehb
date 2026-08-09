@@ -414,15 +414,19 @@ function initRatingForm() {
   const submitBtn = document.getElementById("submitRatingBtn");
   const closeBtn = document.getElementById("closeRatingBtn");
   const commentInput = document.getElementById("ratingComment");
+  const honeypotInput = document.getElementById("ratingHoney");
 
   if (!overlay || !form || !commentInput) return;
 
   let selectedRating = 0;
+  let isCooldownActive = false;
+  const COOLDOWN_MS = 30000;
+
   const updateSubmitButtonState = () => {
     const hasComment = commentInput.value.trim().length > 0;
     const hasRating = selectedRating > 0;
-    submitBtn.disabled = !hasComment && !hasRating;
-    submitBtn.textContent = submitBtn.disabled ? "Отправить оценку" : "Отправить оценку";
+    submitBtn.disabled = isCooldownActive || (!hasComment && !hasRating);
+    submitBtn.textContent = isCooldownActive ? "Подождите..." : "Отправить оценку";
   };
 
   submitBtn.disabled = true;
@@ -459,6 +463,15 @@ function initRatingForm() {
       return;
     }
 
+    if (honeypotInput && honeypotInput.value.trim()) {
+      return;
+    }
+
+    if (isCooldownActive) {
+      return;
+    }
+
+    isCooldownActive = true;
     submitBtn.disabled = true;
     submitBtn.textContent = "Отправляем...";
 
@@ -474,7 +487,14 @@ function initRatingForm() {
       console.error(err);
       submitBtn.textContent = "❌ Ошибка отправки";
       submitBtn.disabled = false;
+      isCooldownActive = false;
+      updateSubmitButtonState();
     }
+
+    setTimeout(() => {
+      isCooldownActive = false;
+      updateSubmitButtonState();
+    }, COOLDOWN_MS);
   });
 
   closeBtn.addEventListener("click", hideRatingForm);
