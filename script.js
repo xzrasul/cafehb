@@ -420,7 +420,7 @@ function initRatingForm() {
 
   let selectedRating = 0;
   let isCooldownActive = false;
-  const COOLDOWN_MS = 30000;
+  const COOLDOWN_MS = 2000;
 
   const updateSubmitButtonState = () => {
     const hasComment = commentInput.value.trim().length > 0;
