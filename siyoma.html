@@ -275,7 +275,7 @@
       if (submitBtn) {
         submitBtn.addEventListener("click", async () => {
           const comment = commentInput ? commentInput.value.trim() : "";
-          const finalRating = selectedRating || 0;
+          const finalRating = selectedRating > 0 ? selectedRating : null;
 
           if (!comment && !finalRating) {
             return;

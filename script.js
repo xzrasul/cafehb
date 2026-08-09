@@ -453,7 +453,7 @@ function initRatingForm() {
 
   submitBtn.addEventListener("click", async () => {
     const comment = commentInput.value.trim();
-    const finalRating = selectedRating || 0;
+    const finalRating = selectedRating > 0 ? selectedRating : null;
 
     if (!comment && !finalRating) {
       return;

@@ -12,8 +12,9 @@ export default async function handler(req, res) {
     const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const ratingText = stars ? `⭐${stars} ` : "";
-    const starEmojis = stars ? "⭐".repeat(stars) : "";
+    const hasRating = typeof stars === "number" && stars > 0;
+    const ratingText = hasRating ? `⭐${stars} ` : "";
+    const starEmojis = hasRating ? "⭐".repeat(stars) : "";
     const commentText = comment ? `\n💬 ${comment}` : "";
     const text = `${ratingText}Оценка кафе: ${starEmojis}${commentText}`.trim();
 
