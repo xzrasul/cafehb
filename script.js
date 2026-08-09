@@ -356,21 +356,22 @@ function initBackToTop() {
 
 /* ---------- Рейтинговая система ---------- */
 
-async function sendRating(stars) {
+async function sendRating(stars, comment = "") {
   const response = await fetch("/api/rate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ stars }),
+    body: JSON.stringify({ stars, comment }),
   });
 
   const data = await response.json();
   if (!data.ok) throw new Error("Failed to send rating");
 }
 
-function saveRatingToStorage(stars) {
+function saveRatingToStorage(stars, comment = "") {
   const ratings = JSON.parse(localStorage.getItem("cafeRatings") || "[]");
   ratings.push({
-    stars: stars,
+    stars,
+    comment,
     timestamp: new Date().toISOString(),
   });
   localStorage.setItem("cafeRatings", JSON.stringify(ratings));
@@ -379,13 +380,15 @@ function saveRatingToStorage(stars) {
 function showRatingForm() {
   const overlay = document.getElementById("ratingOverlay");
   const form = document.getElementById("ratingForm");
+  const commentInput = document.getElementById("ratingComment");
 
-  if (!overlay || !form) return;
+  if (!overlay || !form || !commentInput) return;
 
   document.querySelectorAll(".rating-star").forEach((star) => {
     star.classList.remove("active");
   });
 
+  commentInput.value = "";
   overlay.classList.add("active");
   document.body.style.overflow = "hidden";
 }
@@ -410,8 +413,9 @@ function initRatingForm() {
   const stars = document.querySelectorAll(".rating-star");
   const submitBtn = document.getElementById("submitRatingBtn");
   const closeBtn = document.getElementById("closeRatingBtn");
+  const commentInput = document.getElementById("ratingComment");
 
-  if (!overlay || !form) return;
+  if (!overlay || !form || !commentInput) return;
 
   let selectedRating = 0;
 
@@ -441,12 +445,13 @@ function initRatingForm() {
       return;
     }
 
+    const comment = commentInput.value.trim();
     submitBtn.disabled = true;
     submitBtn.textContent = "Отправляем...";
 
     try {
-      await sendRating(selectedRating);
-      saveRatingToStorage(selectedRating);
+      await sendRating(selectedRating, comment);
+      saveRatingToStorage(selectedRating, comment);
 
       submitBtn.textContent = "✅ Спасибо за оценку!";
       setTimeout(() => {

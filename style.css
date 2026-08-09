@@ -1316,7 +1316,27 @@ footer::before {
     display: flex;
     justify-content: center;
     gap: 16px;
-    margin: 28px 0 32px;
+    margin: 28px 0 20px;
+}
+
+.rating-comment {
+    width: 100%;
+    min-height: 90px;
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border: 1px solid #d8e2f5;
+    border-radius: 14px;
+    resize: vertical;
+    font-size: 14px;
+    font-family: 'FixelText', sans-serif;
+    color: #1a1a2e;
+    box-sizing: border-box;
+}
+
+.rating-comment:focus {
+    outline: none;
+    border-color: #4A7BE0;
+    box-shadow: 0 0 0 3px rgba(74, 123, 224, 0.15);
 }
 
 .rating-star {

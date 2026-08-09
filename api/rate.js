@@ -3,7 +3,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { stars } = req.body;
+    const { stars, comment } = req.body;
 
     if (!stars || stars < 1 || stars > 5) {
         return res.status(400).json({ error: "Invalid rating" });
@@ -13,7 +13,8 @@ export default async function handler(req, res) {
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
     const starEmojis = "⭐".repeat(stars);
-    const text = `⭐${stars} Оценка кафе: ${starEmojis}`;
+    const commentText = comment ? `\n💬 ${comment}` : "";
+    const text = `⭐${stars} Оценка кафе: ${starEmojis}${commentText}`;
 
     const response = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
