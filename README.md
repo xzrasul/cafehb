@@ -1,40 +1,40 @@
 # café hb
 
-Онлайн-меню кафе **café hb** (Душанбе). Посетители открывают сайт по QR-коду на столе, листают меню по
-категориям и могут оставить оценку/отзыв, который сразу улетает владельцу в Telegram.
+Online menu for **café hb** (Dushanbe). Visitors open the site via a QR code on the table, browse the
+menu by category, and can leave a rating/review that is sent directly to the owner via Telegram.
 
-## Стек
+## Stack
 
-Чистые HTML/CSS/JS, без сборки и фреймворков. Хостится на [Vercel](https://vercel.com).
+Plain HTML/CSS/JS, no build step and no frameworks. Hosted on [Vercel](https://vercel.com).
 
-## Структура
+## Structure
 
-| Файл/папка       | Назначение                                                              |
+| File/folder       | Purpose                                                                 |
 | ----------------- | ------------------------------------------------------------------------ |
-| `index.html`      | главная страница меню                                                    |
-| `products.js`     | данные о товарах (цены, описания, категории, картинки)                   |
-| `script.js`       | вся логика: рендер карточек, попапы, фильтр по категориям, форма оценки  |
-| `style.css`       | стили, подключает шрифт Fixel из `FixelAll/`                             |
-| `content/`        | фото товаров по категориям + лого/баннер                                 |
-| `siyoma.html`     | отдельная страница-меню только с напитками (`/siyoma`)                   |
-| `api/rate.js`     | serverless-функция: принимает оценку/отзыв и шлёт в Telegram             |
-| `vercel.json`     | rewrite-правила для `/api/*` и `/siyoma`                                 |
+| `index.html`      | main menu page                                                           |
+| `products.js`     | product data (prices, descriptions, categories, images)                 |
+| `script.js`       | all the logic: card rendering, popups, category filtering, rating form  |
+| `style.css`       | styles, loads the Fixel font from `FixelAll/`                           |
+| `content/`        | product photos by category + logo/banner                                |
+| `siyoma.html`     | a separate drinks-only menu page (`/siyoma`)                            |
+| `api/rate.js`     | serverless function: accepts a rating/review and sends it to Telegram   |
+| `vercel.json`     | rewrite rules for `/api/*` and `/siyoma`                                 |
 
-## Запуск локально
+## Running locally
 
-Сборки нет — достаточно открыть `index.html` в браузере или поднять любой статический сервер:
+There's no build step — just open `index.html` in a browser, or spin up any static server:
 
 ```bash
 npx serve .
 ```
 
-Форма оценки (`api/rate.js`) требует переменные окружения `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`
-(настраиваются в Vercel, в репозитории их быть не должно).
+The rating form (`api/rate.js`) requires the `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` environment
+variables (configured in Vercel, they should not be present in the repository).
 
-## Деплой
+## Deployment
 
-Пуш в `main` автоматически деплоится на Vercel.
+Pushing to `main` automatically deploys to Vercel.
 
-## Лицензия
+## License
 
 [GPLv3](LICENSE).
