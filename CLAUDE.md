@@ -1,66 +1,69 @@
-# cafehb — онлайн-меню кафе café hb
+# cafehb — café hb online menu
 
-Статический сайт-меню для кафе **café hb** (Душанбе). Посетители открывают сайт по QR-коду на столе,
-листают меню по категориям и могут оставить оценку/отзыв, который улетает в Telegram владельцу.
+A static menu website for **café hb** (Dushanbe). Visitors open the site via a QR code on the table,
+browse the menu by category, and can leave a rating/review that gets sent to the owner via Telegram.
 
-Код лицензирован под **GPLv3** (см. `LICENSE`).
+The code is licensed under **GPLv3** (see `LICENSE`).
 
-## Стек и деплой
+## Stack and deployment
 
-- Чистый HTML/CSS/JS без сборки, без фреймворка, без `package.json`. Это осознанный выбор — не добавляй
-  бандлер, npm-зависимости или фреймворк, если явно не попросили.
-- Хостинг — Vercel. `vercel.json` описывает rewrite-правила (`/api/*` → serverless-функции в `api/`,
-  `/siyoma` → `siyoma.html`). Пуш в `main` триггерит автодеплой на Vercel — учитывай это при пуше.
-- `api/rate.js` — Vercel serverless function (Node), принимает POST с оценкой/отзывом и пересылает его
-  в Telegram-бот через Bot API. Секреты `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` живут только в
-  переменных окружения Vercel — **никогда не коммить их в репозиторий**.
+- Plain HTML/CSS/JS, no build step, no framework, no `package.json`. This is a deliberate choice — don't
+  add a bundler, npm dependencies, or a framework unless explicitly asked.
+- Hosted on Vercel. `vercel.json` defines rewrite rules (`/api/*` → serverless functions in `api/`,
+  `/siyoma` → `siyoma.html`). Pushing to `main` triggers an automatic deploy on Vercel — keep that in
+  mind when pushing.
+- `api/rate.js` — a Vercel serverless function (Node) that accepts a POST with a rating/review and
+  forwards it to a Telegram bot via the Bot API. The `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+  secrets live only in Vercel environment variables — **never commit them to the repository**.
 
-## Структура
+## Structure
 
-- `index.html` — главная страница меню (шапка с категориями, слайдер категорий на мобильных, сетка
-  товаров, форма оценки кафе).
-- `products.js` — единственный источник данных о товарах: объект `defaultProducts`, ключи — категории
-  (`drinks`, `breakfast`, `burgers`, `sandwiches`, `salads`, `soups`, `dishes`), значения — массивы
-  товаров `{ id, name, price, image, description, volume? }`.
-- `script.js` — вся логика: список категорий (`CATEGORIES`), рендер карточек товара, попапы/шторки,
-  фильтрация по категории, адаптивные лимиты карточек (моб./десктоп), логика формы оценки
-  (honeypot-проверка на клиенте, отправка на `/api/rate`).
-- `style.css` — вся стилизация, подключает шрифт Fixel через `@font-face` из `FixelAll/`.
-- `content/` — изображения товаров, разложенные по папкам-категориям на русском (`Напитки`, `Завтраки`,
-  `Бургеры`, `Cендвич`, `Салаты`, `Супы`, `Горячие блюда`) + `content/logo/` (лого, баннер, иконки).
-  Путь к файлу в `products.js.image` должен точно совпадать с реальным путём в `content/`.
-- `siyoma.html` — отдельная самостоятельная страница-меню **только с напитками**, без общей навигации.
-  Открывается по адресу `/siyoma` (см. rewrite в `vercel.json`). Вероятно, отдельный QR/стенд.
-  Использует те же `style.css`/`products.js`/`script.js`, но со своим набором данных для рендера.
-- `reference.html` — **не часть сайта**, отдельный визуальный референс/showcase анимации карточек,
-  никуда не подключён и не должен рассматриваться как код сайта. Не трогай его, если явно не попросили.
-- `FixelAll/` — исходники шрифта Fixel (Display/Text/Variable, все начертания). Используется только
-  `FixelText` через `@font-face` в `style.css`. Внутри есть мусор от распаковки архива (`.DS_Store`,
-  `__MACOSX/`) — не наводи там порядок без явной просьбы, это не относится к задаче.
+- `index.html` — the main menu page (header with categories, category slider on mobile, product grid,
+  cafe rating form).
+- `products.js` — the single source of product data: the `defaultProducts` object, keyed by category
+  (`drinks`, `breakfast`, `burgers`, `sandwiches`, `salads`, `soups`, `dishes`), values are arrays of
+  products `{ id, name, price, image, description, volume? }`.
+- `script.js` — all the logic: category list (`CATEGORIES`), product card rendering, popups/sheets,
+  category filtering, adaptive card limits (mobile/desktop), rating form logic (client-side honeypot
+  check, submission to `/api/rate`).
+- `style.css` — all styling, loads the Fixel font via `@font-face` from `FixelAll/`.
+- `content/` — product images organized into category folders in Russian (`Напитки`, `Завтраки`,
+  `Бургеры`, `Cендвич`, `Салаты`, `Супы`, `Горячие блюда`) + `content/logo/` (logo, banner, icons).
+  The file path in `products.js.image` must exactly match the real path in `content/`.
+- `siyoma.html` — a separate standalone menu page **with drinks only**, without the shared navigation.
+  Accessible at `/siyoma` (see the rewrite in `vercel.json`). Likely a separate QR/stand. Uses the same
+  `style.css`/`products.js`/`script.js`, but with its own data set for rendering.
+- `reference.html` — **not part of the site**, a separate visual reference/showcase of card animation,
+  not linked anywhere and should not be treated as site code. Don't touch it unless explicitly asked.
+- `FixelAll/` — Fixel font sources (Display/Text/Variable, all weights). Only `FixelText` is used, via
+  `@font-face` in `style.css`. Contains leftover archive-extraction junk (`.DS_Store`, `__MACOSX/`) —
+  don't clean it up without an explicit request, it's unrelated to the task.
 
-## Что нужно делать
+## What to do
 
-- Меню (`products.js`) должно оставаться точным: актуальные цены, объёмы (`volume`), описания на
-  русском, корректные пути к изображениям. При добавлении товара — искать/добавлять картинку в
-  соответствующую папку `content/<Категория>/` и заводить `id`, совпадающий с уникальным ключом товара.
-- UI/UX меню (карточки, попапы, слайдер категорий, баннер, кнопка «Оценить нас», кнопка «наверх») —
-  адаптивный, отдельные брейкпоинты для мобильных (см. `MOBILE_BREAKPOINT` в `script.js`).
-- Форма оценки (`rating-form`) и её backend (`api/rate.js`) защищены от спама honeypot-полем и
-  IP-based rate-limit (30 сек/запрос) — судя по истории коммитов (`Protect from spam`, `Fix protecting`,
-  `Fix stars`), это активная область, к изменениям в ней нужно подходить аккуратно и с тестированием.
-- Весь пользовательский текст — на русском (кафе в Душанбе, аудитория русскоязычная). Не переводи
-  интерфейс на английский.
+- The menu (`products.js`) must stay accurate: current prices, volumes (`volume`), descriptions in
+  Russian, correct image paths. When adding a product — find/add an image in the corresponding
+  `content/<Category>/` folder and set an `id` that matches a unique product key.
+- Menu UI/UX (cards, popups, category slider, banner, "Rate us" button, "back to top" button) is
+  responsive, with separate breakpoints for mobile (see `MOBILE_BREAKPOINT` in `script.js`).
+- The rating form (`rating-form`) and its backend (`api/rate.js`) are protected against spam with a
+  honeypot field and IP-based rate limiting (30 sec/request) — judging by commit history
+  (`Protect from spam`, `Fix protecting`, `Fix stars`), this is an active area and changes here need
+  care and testing.
+- All user-facing text is in Russian (the cafe is in Dushanbe, Russian-speaking audience). Don't
+  translate the site's interface into English.
 
-## Чего делать нельзя
+## What not to do
 
-- Не коммитить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` или любые другие секреты — только через env
-  переменные Vercel.
-- Не убирать и не ослаблять honeypot/rate-limit защиту в `api/rate.js` без явной просьбы — эта защита
-  добавлялась намеренно после проблем со спамом.
-- Не добавлять сборку/бандлер/фреймворк/`package.json` — сайт намеренно статический и без зависимостей.
-- Не ломать rewrite `/siyoma → siyoma.html` и не менять `siyoma.html` так, чтобы он перестал быть
-  самостоятельной страницей только с напитками.
-- Не трогать `reference.html` и мусорные файлы в `FixelAll/__MACOSX`, `.DS_Store` — они не часть
-  рабочего кода сайта.
-- Не переименовывать/перемещать файлы в `content/` без обновления соответствующих путей `image` в
-  `products.js` — рассинхрон путей молча ломает картинки в проде.
+- Don't commit `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, or any other secrets — only via Vercel env
+  variables.
+- Don't remove or weaken the honeypot/rate-limit protection in `api/rate.js` without an explicit
+  request — this protection was added deliberately after spam issues.
+- Don't add a build step/bundler/framework/`package.json` — the site is intentionally static and
+  dependency-free.
+- Don't break the `/siyoma → siyoma.html` rewrite, and don't change `siyoma.html` so that it stops
+  being a standalone drinks-only page.
+- Don't touch `reference.html` or the junk files in `FixelAll/__MACOSX`, `.DS_Store` — they aren't part
+  of the site's working code.
+- Don't rename/move files in `content/` without updating the corresponding `image` paths in
+  `products.js` — a path mismatch silently breaks images in production.
